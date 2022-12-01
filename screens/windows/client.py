@@ -1,15 +1,16 @@
 import tkinter as tk
 from tkinter import messagebox
-import offer
+from screens.windows import offer
+from interface import *
 
 class userInsert(tk.Toplevel):
-    
     def __init__(self, server):
+        ''' window for addign a client '''
         bSize = [1, 10]
         tSize = [8, 15]
         tk.Toplevel.__init__(self)
         self.title("Happy home - New User")
-        self.geometry("400x200")
+        self.geometry(newClient)
         self.resizable(False,False)
         self.manejador = server
 
@@ -35,7 +36,7 @@ class userInsert(tk.Toplevel):
         
         self.Añadir.grid(column=0, row=5, columnspan=2)
         
-        self.grid_positioning(0,
+        grid_positioning(0,
             [[self.nombreL,[self.nombreE],1], 
              [self.apellidoPL,[self.apellidoPE], 1],
              [self.apellidoML,[self.apellidoME], 1],
@@ -45,16 +46,11 @@ class userInsert(tk.Toplevel):
         self.protocol("WM_DELETE_WINDOW", self.on_closing)
         self.grab_set()
         self.focus
-    
-    def grid_positioning(self, init=int, list=list):
-        for i in range(len(list)):
-            list[i][0].grid(column=0, row=i+init, sticky=tk.E)
-            for j in range(len(list[i][1])):
-                list[i][1][j].grid(column=j+1, row=i+init, sticky=tk.W, columnspan=list[i][2])
             
 
     def validate(self, action, index, value_if_allowed,
                        prior_value, text, validation_type, trigger_type, widget_name):
+        if value_if_allowed=='': return True
         if value_if_allowed:
             try:
                 int(value_if_allowed)

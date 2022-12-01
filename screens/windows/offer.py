@@ -1,19 +1,26 @@
 import tkinter as tk
 from tkinter import messagebox
+from interface import *
+
+Self = 0
 
 class offerInsert(tk.Toplevel):
     
     def __init__(self, client = None, server = None):
+        ''' window for adding a offer '''
+        global Self
         bSize = [1, 10]
         tSize = [8, 25]
         tk.Toplevel.__init__(self)
         self.title("Happy home - New Offer")
-        self.geometry("550x750")
+        self.geometry(newOffer)
         self.resizable(False,False)
         self.manejador = server
         aux = self.manejador.get_clients(client) if client != None else None
 
-        self.config_grid([[i,1] for i in range(0,21)], [[i,1] for i in range(0,4)])
+        Self = self
+
+        config_grid(self,[[i,1] for i in range(0,21)], [[i,1] for i in range(0,4)])
 
         vcmd = (self.register(self.validate),
                 '%d', '%i', '%P', '%s', '%S', '%v', '%V', '%W')
@@ -38,10 +45,10 @@ class offerInsert(tk.Toplevel):
         
         self.cliente.grid(column=0, row=0, sticky=tk.W)
 
-        self.grid_positioning(1,
-            [[self.idClienteL, [self.idClienteE],3], 
-            [self.nombreL, [self.nombreE],3], 
-            [self.apellidosL, [self.apellidosE],3]])
+        grid_positioning(1,
+                         [[self.idClienteL, [self.idClienteE],3], 
+                          [self.nombreL, [self.nombreE],3], 
+                          [self.apellidosL, [self.apellidosE],3]])
 
         #############################################################
         ##------------------Datos de la propiedad------------------##
@@ -71,7 +78,7 @@ class offerInsert(tk.Toplevel):
         self.superficieTE = tk.Entry(self, font = tSize[0], width=tSize[1]-15, validate = 'key', validatecommand = vcmd)
         self.superficieCE = tk.Entry(self, font = tSize[0], width=tSize[1]-15, validate = 'key', validatecommand = vcmd)
 
-        self.amuebladaE = tk.StringVar()
+        self.amuebladaE = tk.StringVar(value="Si")
         self.amuebladaEO1= tk.Radiobutton(self, 
                text="Si",
                variable=self.amuebladaE, 
@@ -88,7 +95,7 @@ class offerInsert(tk.Toplevel):
                 value="Semi",
                 font = tSize[0])
 
-        self.numRecamarasE = tk.Scale(self, from_=0, to=20, orient=tk.HORIZONTAL, font = tSize[0], width=tSize[1])
+        self.numRecamarasE = tk.Scale(self, from_=1, to=20, orient=tk.HORIZONTAL, font = tSize[0], width=tSize[1])
         self.numBañosE = tk.Scale(self, from_=1, to=20, orient=tk.HORIZONTAL, font = tSize[0], width=tSize[1])
         self.numNivelesE = tk.Scale(self, from_=1, to=10, orient=tk.HORIZONTAL, font = tSize[0], width=tSize[1])
         self.mascotasE = tk.IntVar()
@@ -124,7 +131,7 @@ class offerInsert(tk.Toplevel):
 
         self.propiedad.grid(column=0, row=4, sticky=tk.W)
 
-        self.grid_positioning(5,
+        grid_positioning(5,
             [[self.tipoL, [self.tipo], 3],
             [self.direccionL, [self.direccionE], 3],
             [self.superficieTL, [self.superficieTE], 3],
@@ -162,7 +169,7 @@ class offerInsert(tk.Toplevel):
 
         self.oferta.grid(column=0, row=17, sticky=tk.W)
 
-        self.grid_positioning(18,
+        grid_positioning(18,
             [[self.estadoL, [self.estado], 3],
             [self.monedaL, [self.moneda], 3],
             [self.precioL, [self.precioE], 3]])
@@ -177,16 +184,11 @@ class offerInsert(tk.Toplevel):
     ##############################################################
     ##---------------------Funciones de la GUI------------------##
     ##############################################################
-
-    def grid_positioning(self, init=int, list=list):
-        for i in range(len(list)):
-            list[i][0].grid(column=0, row=i+init, sticky=tk.E)
-            for j in range(len(list[i][1])):
-                list[i][1][j].grid(column=j+1, row=i+init, sticky=tk.W, columnspan=list[i][2])
             
 
     def validate(self, action, index, value_if_allowed,
                        prior_value, text, validation_type, trigger_type, widget_name):
+        if value_if_allowed=='': return True
         if value_if_allowed:
             try:
                 int(value_if_allowed)
@@ -196,27 +198,22 @@ class offerInsert(tk.Toplevel):
         else:
             return False
 
-    def config_grid(self, rows: list, columns: list):
-        for i in range(len(rows)):
-            self.rowconfigure(rows[i][0], weight=rows[i][1])
-        for i in range(len(columns)):
-            self.columnconfigure(columns[i][0], weight=columns[i][1])
-
     ##############################################################
     ##---------------Funciones de funcionamiento----------------##
     ##############################################################
-    def check_client(self,event):
-        id = self.idClienteE.get()
-        cliente = self.manejador.get_clients(id)
+    def check_client(self, event):
+        id = Self.idClienteE.get()
+        try:cliente = Self.manejador.get_clients(id)
+        except:cliente = None
         if cliente == None:
-            self.idClienteE.config(fg="red")
-            self.idClienteE.delete(0, tk.END)
+            Self.idClienteE.config(fg="red")
+            Self.idClienteE.delete(0, tk.END)
             tk.messagebox.showerror(title="Error", message="No se encontro cliente.")
 
-        elif self.nombreE.get() == '' and self.apellidosE.get() == '':
-            self.idClienteE.config(fg="black")
-            self.nombreE.insert(0, cliente[1])
-            self.apellidosE.insert(0, cliente[2]+" "+cliente[3])
+        elif Self.nombreE.get() == '' and Self.apellidosE.get() == '':
+            Self.idClienteE.config(fg="black")
+            Self.nombreE.insert(0, cliente[1])
+            Self.apellidosE.insert(0, cliente[2]+" "+cliente[3])
 
     def addOffer(self):
         try:
