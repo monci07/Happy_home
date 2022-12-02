@@ -78,7 +78,7 @@ def offerShowMenu(self):
     self.numNivelesE = tk.Entry(self, font =self.tSize[0], width=self.tSize[1]-10, validate = 'key', validatecommand = self.vcmd)
     
     self.mascotasL = tk.Label(self, text = "Mascotas:", font =self.tSize[0])
-    self.mascotasE = tk.IntVar()
+    self.mascotasE = tk.IntVar(value = 2)
     self.mascotasEO1= tk.Radiobutton(self,
             text="Si",
             variable=self.mascotasE,
@@ -98,7 +98,7 @@ def offerShowMenu(self):
     menu.config(font=self.tSize[0])
     
     self.adjL = tk.Label(self, text = "Adjudicada:", font =self.tSize[0])
-    self.adjE = tk.IntVar()
+    self.adjE = tk.IntVar(value = 2)
     self.adjEO1= tk.Radiobutton(self,
             text="Si",
             variable=self.adjE,
@@ -119,28 +119,28 @@ def offerShowMenu(self):
     style.configure("Treeview", font=self.tSize[0])
     style.configure("Treeview.Heading", font=self.tSize[0])
     tree_handler(self.offersResult,[50, #"ID"
-                                            220, #"Propietario"
-                                            400, #"Direccion"
-                                            100, #"Tipo"
-                                            100, #"Estado"
-                                            150, #"Moneda"
-                                            150, #"Precio"
-                                            150, #"S. Terreno(m2)"
-                                            150, #"S. Constr.(m2)"
-                                            105, #"Amueblado"
-                                            105, #"Recamaras"
-                                            90, #"Baños"
-                                            90, #"Niveles"
-                                            100, #"Mascotas"
-                                            110, #"Posesion"
-                                            110]) #"Adjudicada"        
+                                    220, #"Propietario"
+                                    400, #"Direccion"
+                                    100, #"Tipo"
+                                    100, #"Estado"
+                                    150, #"Moneda"
+                                    150, #"Precio"
+                                    150, #"S. Terreno(m2)"
+                                    150, #"S. Constr.(m2)"
+                                    105, #"Amueblado"
+                                    105, #"Recamaras"
+                                    90, #"Baños"
+                                    90, #"Niveles"
+                                    100, #"Mascotas"
+                                    110, #"Posesion"
+                                    110]) #"Adjudicada"        
     
     verscrlbar = ttk.Scrollbar(self, orient ="vertical", command = self.offersResult.yview)
     horzscrlbar = ttk.Scrollbar(self, orient ="horizontal", command = self.offersResult.xview)
     self.offersResult.bind('<Button-1>', O_event_handler)        
     
     self.cerrarTrato = tk.Button(self, text = "Cerrar Trato", font =self.tSize[0], command = lambda: cerrarTrato_handler(self))
-    self.filroO = tk.Button(self, text = "Filtrar", font =self.tSize[0], command = lambda: filtrar_handler(self))
+    self.filroO = tk.Button(self, text = "Filtrar", font =self.tSize[0], command = lambda: offerSearch())
     self.volver = tk.Button(self, text = "Volver", font =self.tSize[0], command = lambda:buscarOMenuInvisible(self), height=bHeight-5, width=10)
     
     self.buscarOMenu = [self.interesado,
@@ -197,9 +197,8 @@ def offerShowMenu(self):
     horzscrlbar.grid(column=3, row=99, columnspan=100, sticky='ews')
     self.offersResult.configure(xscrollcommand = horzscrlbar.set)
     
-    self.offertas = self.manejador.get_ofertas()
-    for offer in self.offertas:
-        data = fix_data(self, offer)
+    for offer in self.manejador.get_ofertas():
+        data = fix_data(offer)
         self.offersResult.insert("", tk.END, iid=data[0], values = data)            
     
     self.volver.grid(column=0, row=19)
@@ -217,7 +216,7 @@ def check_client(event):
         Self.cIdE.config(fg="black")
         Self.cNombreE.insert(0, cliente[1]+' '+cliente[2]+" "+cliente[3])
 
-def fix_data(self, result):
+def fix_data(result):
     result = list(result)
     if result[0]!= 0: #Disponible
         result[14]='Si' if result[13]==1 else 'No' #Mascotas
@@ -228,31 +227,55 @@ def fix_data(self, result):
 def cerrarTrato_handler(self):
     pass
 
-def filtrar_handler(self):
-    filters = {
-        "tipo": self.tipoE.get(),
-        "estado": self.estadoE.get(),
-        "moneda": self.monedaE.get(),
-        "rangoP": [0, 1000000000],
-        "amueblado": self.amuebladaE.get(),
-        "numRecamaras": 0,
-        "numBaños": 0,
-        "numNiveles": 0,
-        "mascotas": self.mascotasE.get(),
-        "posesion": self.posesionE.get(),
-        "adjudicada": self.adjE.get()
-    }        
+def offerSearch():
+    try:
+        offers= filterOffers()
+        for i in Self.offersResult.get_children():
+            Self.offersResult.delete(i)
+        for offer in offers:
+            offer = fix_data(offer)
+            Self.offersResult.insert('', 'end', iid=offer[0], values = offer)
+    except Exception as e:
+        print(e)
 
-    for i in [["numRecamaras",self.numRecamarasE.get()],["numBaños",self.numBañosE.get()],["numNiveles",self.numNivelesE.get()]]:
-        print( i[0], i[1])
-        filters = lookup(filters, i[0], i[1])
-    print(filters)
-    ''' idx = [ 3, 4, 5, 6, 9, 10, 11, 12, 13, 14, 15]
-    filter_child = []
-    if filters.values() != aux.values():
-        for child in self.offersResult.get_children():
-            for i in idx:
-                if self.offersResult.item(child)['values'][i]==filters.values[i] '''    
+def filterOffers():
+    offer=[]
+    offer.append('SELECT p.disponibilidad, o.idOferta, CONCAT(c.nombre, \" \", c.apellidoP, \" \", c.apellidoM), p.direccion, t.tipo, o.estado, o.moneda, o.precio, p.superficieT, p.superficieC, p.amueblada, p.numRecamaras, p.numBaños, p.numNiveles, p.mascotas, p.posesion, p.adjudicion FROM cliente as c INNER JOIN propiedad as p ON c.idCliente = p.propietario INNER JOIN tipospropiedad as t ON p.idTipo = t.idTipo INNER JOIN oferta as o ON o.idOferta = p.idPropiedad')
+    if Self.monedaE.get() != '':
+        offer.append(' o.moneda = \"'+Self.monedaE.get()+'\"')
+    if Self.rangeE1.get() != '':
+        offer.append(' o.precio >= ' + str(Self.rangeE1.get()))
+    if Self.rangeE2.get() != '':
+        offer.append(' o.precio <= ' + str(Self.rangeE2.get()))
+    if Self.tipoE.get() != '':
+        offer.append(' t.tipo = \"'+Self.tipoE.get()+'\"')
+    if Self.estadoE.get() != '':
+        offer.append(' o.estado = \"'+Self.estadoE.get()+'\"')
+    if Self.amuebladaE.get() != '':
+        offer.append(' p.amueblada = \"'+Self.amuebladaE.get()+'\"')
+    if Self.numRecamarasE.get() != '':
+        offer.append(' p.numRecamaras = '+(Self.numRecamarasE.get()))
+    if Self.numBañosE.get() != '':
+        offer.append(' p.numBaños = '+(Self.numBañosE.get()))
+    if Self.numNivelesE.get() != '':
+        offer.append(' p.numNiveles = '+(Self.numNivelesE.get()))
+    if Self.mascotasE.get() != 2:
+        offer.append(' p.mascotas = '+str(Self.mascotasE.get()))
+    if Self.posesionE.get() != '':
+        offer.append(' p.posesion = \"'+Self.posesionE.get()+'\"')
+    if Self.adjE.get() != 2:
+        offer.append(' p.adjudicion = '+str(Self.adjE.get()))
+    query = offer[0]
+    if len(offer) < 2:
+        query += ';'
+        return Self.manejador.consultar(query)
+    else:
+        query += ' WHERE'
+        for f in range(1,len(offer)):
+            query += offer[f]
+            if f < len(offer)-1: query += ' AND'
+        query += ';'
+        return Self.manejador.consultar(query)
 
 def lookup(filters, name, entrie):
     try:

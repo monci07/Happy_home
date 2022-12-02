@@ -2,7 +2,6 @@ import tkinter as tk
 from tkinter import messagebox
 from interface import *
 
-Self = 0
 
 class offerInsert(tk.Toplevel):
     
@@ -17,8 +16,6 @@ class offerInsert(tk.Toplevel):
         self.resizable(False,False)
         self.manejador = server
         aux = self.manejador.get_clients(client) if client != None else None
-
-        Self = self
 
         config_grid(self,[[i,1] for i in range(0,21)], [[i,1] for i in range(0,4)])
 
@@ -202,18 +199,18 @@ class offerInsert(tk.Toplevel):
     ##---------------Funciones de funcionamiento----------------##
     ##############################################################
     def check_client(self, event):
-        id = Self.idClienteE.get()
-        try:cliente = Self.manejador.get_clients(id)
+        id = self.idClienteE.get()
+        try:cliente = self.manejador.get_clients(id)
         except:cliente = None
         if cliente == None:
-            Self.idClienteE.config(fg="red")
-            Self.idClienteE.delete(0, tk.END)
+            self.idClienteE.config(fg="red")
+            self.idClienteE.delete(0, tk.END)
             tk.messagebox.showerror(title="Error", message="No se encontro cliente.")
 
-        elif Self.nombreE.get() == '' and Self.apellidosE.get() == '':
-            Self.idClienteE.config(fg="black")
-            Self.nombreE.insert(0, cliente[1])
-            Self.apellidosE.insert(0, cliente[2]+" "+cliente[3])
+        elif self.nombreE.get() == '' and self.apellidosE.get() == '':
+            self.idClienteE.config(fg="black")
+            self.nombreE.insert(0, cliente[1])
+            self.apellidosE.insert(0, cliente[2]+" "+cliente[3])
 
     def addOffer(self):
         try:

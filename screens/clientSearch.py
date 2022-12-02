@@ -57,7 +57,18 @@ def clientShowMenu(self):
                         self.cApellidoL,self.cApellidoE,
                         self.filtro, self.volver,
                         self.clientsResult, verscrlbar]   
- 
+
+def filterClient(self):
+    clients = clientSearch(self)
+    for i in self.clientsResult.get_children():
+            self.clientsResult.delete(i)
+    if clients != []:
+        for client in clients:
+            self.clientsResult.insert('', 'end', iid=client[0], values = client)
+    else:
+        for client in self.manejador.get_clients():
+            self.clientsResult.insert('', 'end', iid=client[0], values = client)
+
 def clientSearch(self):
     id = self.cIdE.get()
     id = id if id != '' else 0
@@ -79,17 +90,6 @@ def clientSearch(self):
     query += ';'
     clients = self.manejador.consultar(query)
     return clients
-
-def filterClient(self):
-    clients = clientSearch(self)
-    for i in self.clientsResult.get_children():
-            self.clientsResult.delete(i)
-    if clients != []:
-        for client in clients:
-            self.clientsResult.insert('', 'end', iid=client[0], values = client)
-    else:
-        for client in self.manejador.get_clients():
-            self.clientsResult.insert('', 'end', iid=client[0], values = client)
 
 def C_event_handler(event):
     if Self.clientsResult.identify_region(event.x, event.y) == "separator":

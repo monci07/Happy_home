@@ -1,9 +1,10 @@
 import tkinter as tk
 from tkinter import ttk
-from screens.windows import client
-from screens.windows import offer
-from screens import clientSearch
-from screens import offerSearch
+from Screens.windows import client
+from Screens.windows import offer
+from Screens import clientSearch
+from Screens import offerSearch
+from Screens import rentSearch
 import DataBase.server as server
 from interface import *
 
@@ -45,7 +46,7 @@ class App(tk.Tk):
                                       font =self.tSize[0], command = self.addClient, 
                                       height=bHeight, width=15)
         self.rentsSearch= tk.Button(self, text = "Buscar rentas", 
-                                    font =self.tSize[0], command = self.rentShowMenu, 
+                                    font =self.tSize[0], command = lambda: rentSearch.rentShowMenu(self), 
                                     height=bHeight, width=15)
         self.mainMenu = [self.offersResult, self.offersAdd, self.clientsSearch, self.clientsAdd, self.rentsSearch]
 
@@ -84,39 +85,6 @@ class App(tk.Tk):
     
     def addOffer(self):
         self.newWindow = offer.offerInsert(server = self.manejador)
-
-###############################################
-#------------------menus----------------------#
-###############################################
-            
-        #################################################
-        #---------------------Offers--------------------#
-        #################################################
-    
-            
-            #self.offersResult.delete(*self.offersResult.get_children())
-        #################################################
-        #---------------------Client--------------------#
-        #################################################
-
-    
-
-
-            #################################################
-            #----------------------rent---------------------#
-            #################################################
-    def rentShowMenu(self):
-        global bHeight
-        global searchSize
-        mainMenuInvisible(self)
-        self.geometry(searchSize)
-        
-        self.volver = tk.Button(self, text = "Test", font =self.tSize[0], command = lambda: buscarRMenuInvisible(self), height=bHeight, width=30)
-
-        self.buscarRMenu = [self.volver]
-
-        for item in self.buscarRMenu:
-            item.grid(column=1, row=1)
 
 if __name__ == '__main__':
     #creacion de ventana principal

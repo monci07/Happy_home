@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
-from screens.windows import offer
+from Screens.windows import offer
 from interface import *
 
 class userInsert(tk.Toplevel):
