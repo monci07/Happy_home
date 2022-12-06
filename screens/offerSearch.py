@@ -140,7 +140,7 @@ def offerShowMenu(self):
     self.offersResult.bind('<Button-1>', O_event_handler)        
     
     self.cerrarTrato = tk.Button(self, text = "Cerrar Trato", font =self.tSize[0], command = lambda: cerrarTrato_handler(self))
-    self.filroO = tk.Button(self, text = "Filtrar", font =self.tSize[0], command = lambda: offerSearch())
+    self.filroO = tk.Button(self, text = "Filtrar", font =self.tSize[0], command = lambda: offerSearch(self))
     self.volver = tk.Button(self, text = "Volver", font =self.tSize[0], command = lambda:buscarOMenuInvisible(self), height=bHeight-5, width=10)
     
     self.buscarOMenu = [self.interesado,
@@ -198,8 +198,9 @@ def offerShowMenu(self):
     self.offersResult.configure(xscrollcommand = horzscrlbar.set)
     
     for offer in self.manejador.get_ofertas():
-        data = fix_data(offer)
-        self.offersResult.insert("", tk.END, iid=data[0], values = data)            
+        if offer[0] != 0:
+            data = fix_data(offer)
+            self.offersResult.insert("", tk.END, iid=data[0], values = data)            
     
     self.volver.grid(column=0, row=19)
     self.cerrarTrato.grid(column=1, row=19)
@@ -218,29 +219,39 @@ def check_client(event):
 
 def fix_data(result):
     result = list(result)
-    if result[0]!= 0: #Disponible
-        result[14]='Si' if result[13]==1 else 'No' #Mascotas
-        result[16]='Si' if result[15]==1 else 'No' #Adjudicada
-        result.pop(0)
+    print(result[0])
+    result[14]='Si' if result[13]==1 else 'No' #Mascotas
+    result[16]='Si' if result[15]==1 else 'No' #Adjudicada
+    result.pop(0)
     return tuple(result)
 
-def cerrarTrato_handler(self):
-    pass
 
-def offerSearch():
+def cerrarTrato_handler(self):
+    if self.cIdE.get() != '' and self.oIdE.get() != '' and self.interesE.get() != '':
+        self.manejador.consultar('UPDATE oferta SET disponibilidad = 0 WHERE idOferta = '+self.oIdE.get()+';')
+        for i in self.offersResult.get_children():
+            self.offersResult.delete(i)
+        for offer in self.manejador.get_ofertas():
+            if offer[0] != 0:
+                data = fix_data(offer)
+                self.offersResult.insert("", tk.END, iid=data[0], values = data)  
+        
+    
+
+def offerSearch(self):
     try:
         offers= filterOffers()
-        for i in Self.offersResult.get_children():
-            Self.offersResult.delete(i)
+        for i in self.offersResult.get_children():
+            self.offersResult.delete(i)
         for offer in offers:
             offer = fix_data(offer)
-            Self.offersResult.insert('', 'end', iid=offer[0], values = offer)
+            self.offersResult.insert('', 'end', iid=offer[0], values = offer)
     except Exception as e:
         print(e)
 
 def filterOffers():
     offer=[]
-    offer.append('SELECT p.disponibilidad, o.idOferta, CONCAT(c.nombre, \" \", c.apellidoP, \" \", c.apellidoM), p.direccion, t.tipo, o.estado, o.moneda, o.precio, p.superficieT, p.superficieC, p.amueblada, p.numRecamaras, p.numBaños, p.numNiveles, p.mascotas, p.posesion, p.adjudicion FROM cliente as c INNER JOIN propiedad as p ON c.idCliente = p.propietario INNER JOIN tipospropiedad as t ON p.idTipo = t.idTipo INNER JOIN oferta as o ON o.idOferta = p.idPropiedad')
+    offer.append('SELECT o.disponibilidad, o.idOferta, CONCAT(c.nombre, \" \", c.apellidoP, \" \", c.apellidoM), p.direccion, t.tipo, o.estado, o.moneda, o.precio, p.superficieT, p.superficieC, p.amueblada, p.numRecamaras, p.numBaños, p.numNiveles, p.mascotas, p.posesion, p.adjudicion FROM cliente as c INNER JOIN propiedad as p ON c.idCliente = p.propietario INNER JOIN tipospropiedad as t ON p.idTipo = t.idTipo INNER JOIN oferta as o ON o.idOferta = p.idPropiedad')
     if Self.monedaE.get() != '':
         offer.append(' o.moneda = \"'+Self.monedaE.get()+'\"')
     if Self.rangeE1.get() != '':

@@ -28,8 +28,8 @@ CREATE FUNCTION insert_propiedad(
 RETURNS INT
 BEGIN
   DECLARE id INT;
-  INSERT INTO propiedad (idTipo, propietario, direccion, superficieT, superficieC, amueblada, numRecamaras, numNiveles, numBaños, mascotas, posesion, adjudicion, disponibilidad) 
-  VALUES (idTipo, propietario, direccion, superficieT, superficieC, amueblada, numRecamaras, numNiveles, numBaños, mascotas, posesion, adjudicion, 1);
+  INSERT INTO propiedad (idTipo, propietario, direccion, superficieT, superficieC, amueblada, numRecamaras, numNiveles, numBaños, mascotas, posesion, adjudicion) 
+  VALUES (idTipo, propietario, direccion, superficieT, superficieC, amueblada, numRecamaras, numNiveles, numBaños, mascotas, posesion, adjudicion);
   SELECT idPropiedad INTO id FROM propiedad WHERE idPropiedad = LAST_INSERT_ID();
   RETURN id;
 END$$
@@ -43,7 +43,7 @@ CREATE FUNCTION insert_oferta(
 RETURNS INT
 BEGIN
   DECLARE id INT;
-  INSERT INTO oferta (idPropiedad, estado, moneda, precio) VALUES (idPropiedad, estado, moneda, precio);
+  INSERT INTO oferta (idPropiedad, estado, moneda, precio, disponibilidad) VALUES (idPropiedad, estado, moneda, precio, 1);
   SELECT idOferta INTO id FROM oferta WHERE idOferta = LAST_INSERT_ID();
   RETURN id;
 END$$
