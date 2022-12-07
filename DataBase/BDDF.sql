@@ -1,21 +1,14 @@
-INSERT INTO `tipospropiedad`(`tipo`) VALUES ('Casa');
-INSERT INTO `tipospropiedad`(`tipo`) VALUES ('Departamento');
-INSERT INTO `tipospropiedad`(`tipo`) VALUES ('Terreno');
-INSERT INTO `tipospropiedad`(`tipo`) VALUES ('Local C.');
-INSERT INTO `tipospropiedad`(`tipo`) VALUES ('Bodega');
-INSERT INTO `tipospropiedad`(`tipo`) VALUES ('Edificio');
-
 DELIMITER $$
 CREATE FUNCTION insert_client (
-  nombre VARCHAR(15), 
-  apellidoP VARCHAR(20), 
-  apellidoM VARCHAR(20), 
-  tel VARCHAR(14), 
-  correo VARCHAR(45))
+  n VARCHAR(15), 
+  aP VARCHAR(20), 
+  aM VARCHAR(20), 
+  t VARCHAR(14), 
+  c VARCHAR(45))
 RETURNS INT
 BEGIN
   DECLARE id INT;
-  INSERT INTO cliente (nombre, apellidoP, apellidoM, fechaReg, tel, correo) VALUES (nombre, apellidoP, apellidoM, CURDATE(), tel, correo);
+  INSERT INTO cliente (nombre, apellidoP, apellidoM, fechaReg, tel, correo) VALUES (n, aP, aM, CURDATE(), t, c);
   SELECT idCliente INTO id FROM cliente WHERE idCliente = LAST_INSERT_ID();
   RETURN id;
 END$$

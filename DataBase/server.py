@@ -60,3 +60,10 @@ class serverCom():
         fname = self.cursor.fetchall()
         self.cnxn.commit()
         return fname
+    
+    def get_renta(self):
+        query = 'SELECT CONCAT(prop.nombre, " ", prop.apellidoP, " ", prop.apellidoM) as propietario, CONCAT(inq.nombre, " ", inq.apellidoP, " ", inq.apellidoM) as inquilino, p.direccion, r.fechaInicio FROM cliente as inq INNER JOIN rentas as r on inq.idCliente = r.idCliente INNER JOIN oferta as o on r.idOferta=o.idOferta INNER JOIN propiedad as p on p.idPropiedad = o.idPropiedad INNER join cliente as prop on prop.idCliente = p.propietario;'
+        self.cursor.execute(query)
+        fname = self.cursor.fetchall()
+        self.cnxn.commit()
+        return fname

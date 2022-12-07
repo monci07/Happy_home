@@ -14,6 +14,7 @@ class offerInsert(tk.Toplevel):
         self.title("Happy home - New Offer")
         self.geometry(newOffer)
         self.resizable(False,False)
+        self.iconbitmap("home.ico")
         self.manejador = server
         aux = self.manejador.get_clients(client) if client != None else None
 

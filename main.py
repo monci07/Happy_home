@@ -12,23 +12,24 @@ class App(tk.Tk):
 
     def __init__(self):
         super().__init__()
-        global bHeight
-        global mainMenu
 
         self.mainMenu=[]
         self.buscarCMenu=[]
         self.buscarRMenu=[]
         self.buscarOMenu=[]
-
+        self.iconbitmap("home.ico")
         self.bSize = [1, 10]
-        self.tSize = [10, 20]
+        self.tSize = [10, 10]
         self.gSize = [0,1]
 
         self.title("Happy home - Main Menu")
         self.geometry(mainSize)
         self.resizable(False,False)
 
-        self.vcmd = (self.register(self.validate),
+        self.vcmdInt = (self.register(self.validateNumber),
+                '%d', '%i', '%P', '%s', '%S', '%v', '%V', '%W')
+
+        self.vcmdAlpha = (self.register(self.validateAlpha),
                 '%d', '%i', '%P', '%s', '%S', '%v', '%V', '%W')
 
         self.manejador = server.serverCom()
@@ -61,7 +62,7 @@ class App(tk.Tk):
         
         self.protocol("WM_DELETE_WINDOW", self.on_closing)
 
-    def validate(self, action, index, value_if_allowed,
+    def validateNumber(self, action, index, value_if_allowed,
                        prior_value, text, validation_type, trigger_type, widget_name):
         if value_if_allowed=='': return True
         if value_if_allowed:
@@ -72,6 +73,17 @@ class App(tk.Tk):
                 return False
         else:
             return False
+    def validateAlpha(self, action, index, value_if_allowed,
+                       prior_value, text, validation_type, trigger_type, widget_name):
+        if value_if_allowed=='': return True
+        if value_if_allowed:
+            try:
+                int(value_if_allowed)
+                return False
+            except ValueError:
+                return True
+        else:
+            return False    
 
     def on_closing(self):
         self.manejador.close_connection()

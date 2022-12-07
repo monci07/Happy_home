@@ -15,7 +15,7 @@ def offerShowMenu(self):
     self.interesado = tk.Label(self, text = "Interesado:", font =self.tSize[0])
 
     self.cIdL = tk.Label(self, text = "ID", font =self.tSize[0])
-    self.cIdE = tk.Entry(self, font =self.tSize[0], width=self.tSize[1]-10, validate = 'key', validatecommand = self.vcmd)
+    self.cIdE = tk.Entry(self, font =self.tSize[0], width=self.tSize[1], validate = 'key', validatecommand = self.vcmdInt)
     self.cIdE.bind("<FocusOut>", check_client)
 
     self.cNombreL = tk.Label(self, text = "Nombre", font =self.tSize[0])
@@ -26,10 +26,10 @@ def offerShowMenu(self):
     self.oferta = tk.Label(self, text = "Oferta:", font =self.tSize[0])
     
     self.oIdL = tk.Label(self, text = "ID:", font =self.tSize[0])
-    self.oIdE = tk.Entry(self, font =self.tSize[0], width=self.tSize[1]-10)
+    self.oIdE = tk.Entry(self, font =self.tSize[0], width=self.tSize[1])
     
     self.interesL = tk.Label(self, text = "Interes:", font =self.tSize[0])
-    self.interesE = tk.Entry(self, font =self.tSize[0], width=self.tSize[1]-10, validate = 'key', validatecommand = self.vcmd)
+    self.interesE = tk.Entry(self, font =self.tSize[0], width=self.tSize[1], validate = 'key', validatecommand = self.vcmdInt)
     
     #################################################
     
@@ -43,8 +43,8 @@ def offerShowMenu(self):
     menu.config(font=self.tSize[0])
     
     self.rangeL = tk.Label(self, text = "Rango P.:", font =self.tSize[0])
-    self.rangeE1 = tk.Entry(self, font =self.tSize[0], width=self.tSize[1]-10, validate = 'key', validatecommand = self.vcmd)
-    self.rangeE2 = tk.Entry(self, font =self.tSize[0], width=self.tSize[1]-10, validate = 'key', validatecommand = self.vcmd)
+    self.rangeE1 = tk.Entry(self, font =self.tSize[0], width=self.tSize[1], validate = 'key', validatecommand = self.vcmdInt)
+    self.rangeE2 = tk.Entry(self, font =self.tSize[0], width=self.tSize[1], validate = 'key', validatecommand = self.vcmdInt)
     
     self.estadoL = tk.Label(self, text = "Estado:", font =self.tSize[0])
     self.estadoE = tk.StringVar()
@@ -69,13 +69,13 @@ def offerShowMenu(self):
     menu.config(font=self.tSize[0])        
     
     self.numRecamarasL = tk.Label(self, text = "Num. Recamaras:", font =self.tSize[0])
-    self.numRecamarasE = tk.Entry(self, font =self.tSize[0], width=self.tSize[1]-10, validate = 'key', validatecommand = self.vcmd)
+    self.numRecamarasE = tk.Entry(self, font =self.tSize[0], width=self.tSize[1], validate = 'key', validatecommand = self.vcmdInt)
     
     self.numBañosL = tk.Label(self, text = "Num. Baños:", font =self.tSize[0])
-    self.numBañosE = tk.Entry(self, font =self.tSize[0], width=self.tSize[1]-10, validate = 'key', validatecommand = self.vcmd)
+    self.numBañosE = tk.Entry(self, font =self.tSize[0], width=self.tSize[1], validate = 'key', validatecommand = self.vcmdInt)
     
     self.numNivelesL = tk.Label(self, text = "Num. Niveles:", font =self.tSize[0])
-    self.numNivelesE = tk.Entry(self, font =self.tSize[0], width=self.tSize[1]-10, validate = 'key', validatecommand = self.vcmd)
+    self.numNivelesE = tk.Entry(self, font =self.tSize[0], width=self.tSize[1], validate = 'key', validatecommand = self.vcmdInt)
     
     self.mascotasL = tk.Label(self, text = "Mascotas:", font =self.tSize[0])
     self.mascotasE = tk.IntVar(value = 2)
@@ -110,6 +110,8 @@ def offerShowMenu(self):
             value=0,
             font = self.tSize[0])
     
+    #################################################
+
     self.offersResult = ttk.Treeview(self, 
                                         columns = ("ID", "Propietario", "Direccion", "Tipo", "Estado", "Moneda", "Precio", "S. Terreno(m2)", "S. Constr.(m2)","Amueblado", "Recamaras", "Baños", "Niveles", "Mascotas", "Posesion", "Adjudicada"), 
                                         show = "headings",
@@ -121,7 +123,7 @@ def offerShowMenu(self):
     tree_handler(self.offersResult,[50, #"ID"
                                     220, #"Propietario"
                                     400, #"Direccion"
-                                    100, #"Tipo"
+                                    150, #"Tipo"
                                     100, #"Estado"
                                     150, #"Moneda"
                                     150, #"Precio"
@@ -139,9 +141,11 @@ def offerShowMenu(self):
     horzscrlbar = ttk.Scrollbar(self, orient ="horizontal", command = self.offersResult.xview)
     self.offersResult.bind('<Button-1>', O_event_handler)        
     
-    self.cerrarTrato = tk.Button(self, text = "Cerrar Trato", font =self.tSize[0], command = lambda: cerrarTrato_handler(self))
-    self.filroO = tk.Button(self, text = "Filtrar", font =self.tSize[0], command = lambda: offerSearch(self))
-    self.volver = tk.Button(self, text = "Volver", font =self.tSize[0], command = lambda:buscarOMenuInvisible(self), height=bHeight-5, width=10)
+
+    f1 = tk.Frame(self)
+    self.filroO = tk.Button(f1, text = "Filtrar", font =self.tSize[0], command = lambda: offerSearch(self), width=10)
+    self.cerrarTrato = tk.Button(f1, text = "Cerrar Trato", font =self.tSize[0], command = lambda: cerrarTrato_handler(self), width=10)
+    self.volver = tk.Button(f1, text = "Volver", font =self.tSize[0], command = lambda:buscarOMenuInvisible(self), width=10)
     
     self.buscarOMenu = [self.interesado,
                         self.cIdL, self.cIdE,
@@ -162,7 +166,7 @@ def offerShowMenu(self):
                         self.posesionL, self.posesionT,
                         self.adjL, self.adjEO1, self.adjEO2,
                         self.offersResult, verscrlbar, horzscrlbar,
-                        self.cerrarTrato, self.filroO , self.volver]        
+                        f1, self.cerrarTrato, self.filroO , self.volver]        
     
     self.interesado.grid(column=0, row=0, sticky=tk.W)
     
@@ -202,9 +206,13 @@ def offerShowMenu(self):
             data = fix_data(offer)
             self.offersResult.insert("", tk.END, iid=data[0], values = data)            
     
-    self.volver.grid(column=0, row=19)
-    self.cerrarTrato.grid(column=1, row=19)
-    self.filroO.grid(column=2, row=19)
+    f1.grid(column=0, row=19, columnspan=3)
+    self.volver.grid(row=0,column=0)
+    self.cerrarTrato.grid(row=0,column=1, padx=10)
+    self.filroO.grid(row=0,column=2)
+    #self.volver.grid(column=0, row=19, sticky='ns')
+    #self.cerrarTrato.grid(column=1, row=19, sticky='ns')
+    #self.filroO.grid(column=2, row=19, sticky='ns')
 
 def check_client(event):
     id = Self.cIdE.get()
@@ -213,30 +221,37 @@ def check_client(event):
         Self.cIdE.config(fg="red")
         Self.cIdE.delete(0, tk.END)
         tk.messagebox.showerror(title="Error", message="No se encontro cliente.")
-    elif Self.cNombreE.get() == '':
+    else:
         Self.cIdE.config(fg="black")
+        Self.cNombreE.delete(0, tk.END)
         Self.cNombreE.insert(0, cliente[1]+' '+cliente[2]+" "+cliente[3])
 
 def fix_data(result):
     result = list(result)
-    print(result[0])
     result[14]='Si' if result[13]==1 else 'No' #Mascotas
     result[16]='Si' if result[15]==1 else 'No' #Adjudicada
     result.pop(0)
     return tuple(result)
 
+def val(interesado, propietario):
+    if interesado!='':
+        if interesado == propietario:
+            tk.messagebox.showerror(title="Error", message="El interesado no puede ser el propietario.")
+            return False
+        else:
+            return True
 
 def cerrarTrato_handler(self):
-    if self.cIdE.get() != '' and self.oIdE.get() != '' and self.interesE.get() != '':
-        self.manejador.consultar('UPDATE oferta SET disponibilidad = 0 WHERE idOferta = '+self.oIdE.get()+';')
-        for i in self.offersResult.get_children():
-            self.offersResult.delete(i)
-        for offer in self.manejador.get_ofertas():
-            if offer[0] != 0:
-                data = fix_data(offer)
-                self.offersResult.insert("", tk.END, iid=data[0], values = data)  
-        
-    
+    id = self.oIdE.get()
+    interesado = self.cNombreE.get()
+    propietario = self.offersResult.item(id)['values'][1]
+    if id != '' and val(interesado, propietario) and self.interesE.get() != '':
+        self.manejador.consultar('UPDATE oferta SET disponibilidad = 0 WHERE idOferta = '+id+';')
+        if(self.offersResult.item(id)['values'][4]=='Renta'):check_renta(self,id,self.cIdE.get())
+        self.offersResult.delete(id)
+      
+def check_renta(self, idOferta, idCliente):
+    print(self.manejador.consultar('INSERT INTO rentas (idOferta, idCliente, fechaInicio) VALUES ('+idOferta+', '+idCliente+', CURDATE());'))
 
 def offerSearch(self):
     try:

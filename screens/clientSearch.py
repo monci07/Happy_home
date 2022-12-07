@@ -14,15 +14,13 @@ def clientShowMenu(self):
     config_grid(self,[[i,0] for i in range(0,4)], [[i,0] for i in range(0,3)])
     
     self.cIdL = tk.Label(self, text = "ID", font =self.tSize[0])
-    self.cIdE = tk.Entry(self, font =self.tSize[0], width=self.tSize[1]-10, validate = 'key', validatecommand = self.vcmd)
+    self.cIdE = tk.Entry(self, font =self.tSize[0], width=self.tSize[1], validate = 'key', validatecommand = self.vcmdInt)
     
     self.cNombreL = tk.Label(self, text = "Nombre", font =self.tSize[0])
-    #TODO: hacerlo alphabetico
-    self.cNombreE = tk.Entry(self, font =self.tSize[0])
+    self.cNombreE = tk.Entry(self, font =self.tSize[0], validate = 'key', validatecommand = self.vcmdAlpha)
     
     self.cApellidoL = tk.Label(self, text = "Apellido", font =self.tSize[0])
-    #TODO: hacerlo alphabetico
-    self.cApellidoE = tk.Entry(self, font =self.tSize[0])
+    self.cApellidoE = tk.Entry(self, font =self.tSize[0], validate = 'key', validatecommand = self.vcmdAlpha)
     
     self.filtro = tk.Button(self, text = "Filtrar", font =self.tSize[0], command = lambda: filterClient(self), height=bHeight-15, width=15)
     self.volver = tk.Button(self, text = "Volver", font =self.tSize[0], command = lambda: buscarCMenuInvisible(self), height=bHeight-15, width=15)

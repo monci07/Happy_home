@@ -13,7 +13,7 @@ class userInsert(tk.Toplevel):
         self.geometry(newClient)
         self.resizable(False,False)
         self.manejador = server
-
+        self.iconbitmap("home.ico")
         vcmd = (self.register(self.validate),
                 '%d', '%i', '%P', '%s', '%S', '%v', '%V', '%W')
 
