@@ -198,7 +198,7 @@ def offerShowMenu(self):
     self.offersResult.grid(column=3, row=0, rowspan=100)        
     verscrlbar.grid(column=3, row=0, rowspan=100, sticky='nse')
     self.offersResult.configure(yscrollcommand = verscrlbar.set)
-    horzscrlbar.grid(column=3, row=99, columnspan=100, sticky='ews')
+    horzscrlbar.grid(column=3, row=19, columnspan=100, sticky='ews')
     self.offersResult.configure(xscrollcommand = horzscrlbar.set)
     
     for offer in self.manejador.get_ofertas():
@@ -210,9 +210,6 @@ def offerShowMenu(self):
     self.volver.grid(row=0,column=0)
     self.cerrarTrato.grid(row=0,column=1, padx=10)
     self.filroO.grid(row=0,column=2)
-    #self.volver.grid(column=0, row=19, sticky='ns')
-    #self.cerrarTrato.grid(column=1, row=19, sticky='ns')
-    #self.filroO.grid(column=2, row=19, sticky='ns')
 
 def check_client(event):
     id = Self.cIdE.get()

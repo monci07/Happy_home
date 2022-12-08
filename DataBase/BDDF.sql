@@ -40,3 +40,11 @@ BEGIN
   SELECT idOferta INTO id FROM oferta WHERE idOferta = LAST_INSERT_ID();
   RETURN id;
 END$$
+
+DELIMITER $$
+CREATE TRIGGER update_availability
+  BEFORE DELETE
+  ON rentas FOR EACH ROW
+BEGIN
+  UPDATE oferta SET disponibilidad = 1 WHERE idOferta = OLD.idOferta;
+END$$
