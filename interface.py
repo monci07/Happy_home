@@ -2,10 +2,12 @@ import tkinter as tk
 from tkinter import ttk
 import pyperclip
 
-mainSize = "1000x300"
+mainSize = "580x425"
 searchSize = "1325x635"
 newOffer = "550x750"
 newClient = "400x200"
+editOffer = "550x800"
+editClient = "400x250"
 bHeight = 5
 
 def grid_positioning(init=int, list=list):

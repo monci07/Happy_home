@@ -3,20 +3,20 @@ from tkinter import messagebox
 from interface import *
 
 
-class offerInsert(tk.Toplevel):
+class offerEdit(tk.Toplevel):
     
-    def __init__(self, client = None, server = None):
+    def __init__(self, server = None):
         ''' window for adding a offer '''
         global Self
         bSize = [1, 10]
         tSize = [8, 25]
         tk.Toplevel.__init__(self)
-        self.title("Happy home - New Offer")
-        self.geometry(newOffer)
+        self.title("Happy home - Offer Edit")
+        self.geometry(editOffer)
         self.resizable(False,False)
         self.iconbitmap("home.ico")
         self.manejador = server
-        aux = self.manejador.get_clients(client) if client != None else None
+        #aux = self.manejador.get_clients(client) if client != None else None
 
         config_grid(self,[[i,1] for i in range(0,21)], [[i,1] for i in range(0,4)])
 
@@ -37,10 +37,10 @@ class offerInsert(tk.Toplevel):
         self.nombreE = tk.Entry(self, font = tSize[0], width=tSize[1]) #, state = "disabled"
         self.apellidosE = tk.Entry(self, font = tSize[0], width=tSize[1])
         
-        if aux!= None:
-            self.idClienteE.insert(0, aux[0])
-            self.nombreE.insert(0, aux[1])
-            self.apellidosE.insert(0, aux[2]+" "+aux[3])
+        #if aux!= None:
+        #    self.idClienteE.insert(0, aux[0])
+        #    self.nombreE.insert(0, aux[1])
+        #    self.apellidosE.insert(0, aux[2]+" "+aux[3])
         
         self.cliente.grid(column=0, row=0, sticky=tk.W)
 

@@ -1,7 +1,11 @@
 import tkinter as tk
 from tkinter import ttk
+
 from Screens.windows import client
 from Screens.windows import offer
+from Screens.windows import clientEdit
+from Screens.windows import offerEdit
+
 from Screens import clientSearch
 from Screens import offerSearch
 from Screens import rentSearch
@@ -34,31 +38,63 @@ class App(tk.Tk):
 
         self.manejador = server.serverCom()
 
-        self.offersResult= tk.Button(self, text = "Buscar ofertas", 
-                                     font =self.tSize[0], command = lambda: offerSearch.offerShowMenu(self), 
-                                     height=bHeight, width=15)
-        self.offersAdd= tk.Button(self, text = "Agregar ofertas", 
+        f1 = tk.Frame(self)
+        self.offersAdd= tk.Button(f1, text = "Agregar ofertas", 
                                   font =self.tSize[0], command = self.addOffer, 
                                   height=bHeight, width=15)
-        self.clientsSearch= tk.Button(self, text = "Buscar clientes", 
+        self.clientsAdd= tk.Button(f1, text = "Agregar clientes", 
+                                   font =self.tSize[0], command = self.addClient, 
+                                   height=bHeight, width=15)
+        
+        ########################################
+        
+        f2 = tk.Frame(self)
+        self.offersSearch= tk.Button(f2, text = "Buscar ofertas", 
+                                     font =self.tSize[0], command = lambda: offerSearch.offerShowMenu(self), 
+                                     height=bHeight, width=15)
+
+        self.clientsSearch= tk.Button(f2, text = "Buscar clientes", 
                                       font =self.tSize[0], command = lambda: clientSearch.clientShowMenu(self), 
                                       height=bHeight, width=15)
-        self.clientsAdd= tk.Button(self, text = "Agregar clientes", 
-                                      font =self.tSize[0], command = self.addClient, 
-                                      height=bHeight, width=15)
-        self.rentsSearch= tk.Button(self, text = "Buscar rentas", 
+
+        self.rentsSearch= tk.Button(f2, text = "Buscar rentas", 
                                     font =self.tSize[0], command = lambda: rentSearch.rentShowMenu(self), 
                                     height=bHeight, width=15)
-        self.mainMenu = [self.offersResult, self.offersAdd, self.clientsSearch, self.clientsAdd, self.rentsSearch]
+        
+        ########################################
+        
+        f3 = tk.Frame(self)
+        self.editOffer= tk.Button(f3, text = "Editar oferta", 
+                                  font =self.tSize[0], command = self.editOffer, 
+                                  height=bHeight, width=15)
+        self.editClient= tk.Button(f3, text = "Editar cliente",
+                                   font =self.tSize[0], command = self.editClient,
+                                   height=bHeight, width=15)
+        
+        self.mainMenu = [f1,
+                         self.clientsAdd, self.offersAdd,
+                         f2,
+                         self.clientsSearch, self.offersSearch, self.rentsSearch,
+                         f3,
+                         self.editOffer, self.editClient]
 
-        config_grid(self,[[i, 1] for i in range(0,2)], [[i, 1] for i in range(0, 5)])
+        config_grid(self,[[i, 1] for i in range(0,4)], [[i, 1] for i in range(0, 3)])
+
+        pad = 10
+        f1.grid(column=0, row=0, columnspan=3)
+        self.offersAdd.grid(column=0, row = 0, padx = pad)
+        self.clientsAdd.grid(column=1, row = 0, padx = pad)
+
+        f2.grid(column=0, row=1, columnspan=3)
+        self.clientsSearch.grid(column=0, row = 0, padx = pad)
+        self.offersSearch.grid(column=1, row = 0, padx = pad)
+        self.rentsSearch.grid(column=3, row = 0, padx = pad)
+        
+        f3.grid(column=0, row=2, columnspan=3)
+        self.editOffer.grid(column=0, row = 0, padx = pad)
+        self.editClient.grid(column=1, row = 0, padx = pad)
 
         
-        self.offersResult.grid(column=0, row=0)
-        self.clientsSearch.grid(column=2, row=0)
-        self.rentsSearch.grid(column=4, row=0)
-        self.offersAdd.grid(column=1, row=1)
-        self.clientsAdd.grid(column=3, row=1)
         
         self.protocol("WM_DELETE_WINDOW", self.on_closing)
 
@@ -73,6 +109,7 @@ class App(tk.Tk):
                 return False
         else:
             return False
+    
     def validateAlpha(self, action, index, value_if_allowed,
                        prior_value, text, validation_type, trigger_type, widget_name):
         if value_if_allowed=='': return True
@@ -97,6 +134,12 @@ class App(tk.Tk):
     
     def addOffer(self):
         self.newWindow = offer.offerInsert(server = self.manejador)
+    
+    def editOffer(self):
+        self.newWindow = offerEdit.offerEdit(self.manejador)
+
+    def editClient(self):
+        self.newWindow = clientEdit.userEdit(self.manejador)
 
 if __name__ == '__main__':
     #creacion de ventana principal

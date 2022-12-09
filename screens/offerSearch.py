@@ -17,7 +17,8 @@ def offerShowMenu(self):
     self.cIdL = tk.Label(self, text = "ID", font =self.tSize[0])
     self.cIdE = tk.Entry(self, font =self.tSize[0], width=self.tSize[1], validate = 'key', validatecommand = self.vcmdInt)
     self.cIdE.bind("<FocusOut>", check_client)
-
+    self.cIdE.bind("<Return>", check_client)
+    
     self.cNombreL = tk.Label(self, text = "Nombre", font =self.tSize[0])
     self.cNombreE = tk.Entry(self, font =self.tSize[0])
     
