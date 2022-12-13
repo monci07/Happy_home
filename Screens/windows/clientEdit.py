@@ -39,7 +39,7 @@ class userEdit(tk.Toplevel):
         self.telE = tk.Entry(self,  font = tSize[0], width=tSize[1], validate = 'key', validatecommand = vcmd, state='disabled')
         self.emailE = tk.Entry(self, font = tSize[0], width=tSize[1], state='disabled')
 
-        self.Añadir= tk.Button(self, text = "Actualizar", command=self.updateCustomer, height=bSize[0], width=bSize[1])
+        self.Añadir= tk.Button(self, text = "Actualizar", command=self.updateCustomer, height=bSize[0], width=bSize[1], font= tSize[0])
         
         grid_positioning(0,
             [[self.idClienteL,[self.idClienteE],1],
@@ -72,22 +72,15 @@ class userEdit(tk.Toplevel):
         nombre=[self.nombreE.get(), self.apellidoPE.get(), self.apellidoME.get()]
         tel = self.telE.get()
         mail=self.emailE.get()
-        print(self.client)
-        
-        
-        #if ('' not in nombre) or ('' not in tel) or ('' not in mail):
-        #    client = self.manejador.insert_client(nombre, tel, mail)
-        #    if messagebox.askyesno(message='Quiere agregarle alguna propiedad?', icon='question', title='Agregar propiedad') == True:
-        #        self.destroy()
-        #        self.newWindow = offer.offerInsert(str(client), self.manejador)
-        #    else:
-        #        self.destroy()
-    
+        self.manejador.consultar('UPDATE cliente SET nombre = \"' + nombre[0] + '\", apellidoP = \"' + nombre[1] + '\", apellidoM = \"' + nombre[2] + '\", tel = \"' + tel + '\", correo = \"' + mail + '\" WHERE idCliente = ' + self.idClienteE.get() + ';')
+        self.destroy()
+       
     def searchCustomer(self, event):
         aux = self.manejador.consultar('SELECT nombre, apellidoP, apellidoM, tel, correo FROM cliente WHERE idCliente = ' + self.idClienteE.get() + ';')
         entrys = [self.nombreE, self.apellidoPE, self.apellidoME, self.telE, self.emailE]
         for i in range(len(aux[0])):
             entrys[i].config(state='normal')
+            entrys[i].delete(0, tk.END)
             entrys[i].insert(0, aux[0][i])
             self.client.append(aux[0][i])
 

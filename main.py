@@ -71,12 +71,7 @@ class App(tk.Tk):
                                    font =self.tSize[0], command = self.editClient,
                                    height=bHeight, width=15)
         
-        self.mainMenu = [f1,
-                         self.clientsAdd, self.offersAdd,
-                         f2,
-                         self.clientsSearch, self.offersSearch, self.rentsSearch,
-                         f3,
-                         self.editOffer, self.editClient]
+        self.mainMenu = [f1, f2, f3]
 
         config_grid(self,[[i, 1] for i in range(0,4)], [[i, 1] for i in range(0, 3)])
 

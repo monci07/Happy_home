@@ -6,8 +6,8 @@ mainSize = "580x425"
 searchSize = "1325x635"
 newOffer = "550x750"
 newClient = "400x200"
-editOffer = "550x800"
-editClient = "400x250"
+editOffer = "550x850"
+editClient = "400x225"
 bHeight = 5
 
 def grid_positioning(init=int, list=list):
@@ -51,10 +51,9 @@ def mainMenuVisible(self):
     '''
     self.geometry(mainSize)
     self.title("Happy home - Main Menu")
-    config_grid(self,[[i, 1] for i in range(0,4)], [[i, 1] for i in range(0, 3)])
+    config_grid(self,[[i, 1] for i in range(0,3)], [[i, 1] for i in range(0, 3)])
     for i in range(len(self.mainMenu)):
-        aux = 1 if (i+1)%2 > 0 else 2
-        self.mainMenu[i].grid(column=i, row=aux)
+        self.mainMenu[i].grid(column=0, row=i, columnspan=3)
 
 def buscarOMenuInvisible(self):
     '''

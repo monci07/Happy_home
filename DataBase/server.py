@@ -18,9 +18,11 @@ class serverCom():
         fname = self.cursor.fetchall()
         self.cnxn.commit()
         return fname
+    
     ################################################################
     #---------------------------Inserts----------------------------#
     ################################################################
+    
     def insert_client(self, nombre, tel, mail):
         aux = 'SELECT insert_client(\"'+nombre[0]+'\", \"'+nombre[1]+'\", \"'+nombre[2]+'\", \"'+tel+'\", \"'+mail+'\") LIMIT 0, 1;'
         self.cursor.execute(aux)
@@ -54,6 +56,13 @@ class serverCom():
         self.cnxn.commit()
         return fname
     
+    def get_specific_offer(self, id):
+        query = "SELECT c.idCliente, t.tipo, p.direccion, p.superficieT, p.superficieC, p.amueblada, p.numRecamaras, p.numBaños, p.numNiveles, p.mascotas, p.posesion, p.adjudicion, o.estado, o.moneda, o.precio FROM cliente as c INNER JOIN propiedad as p ON c.idCliente = p.propietario INNER JOIN tipospropiedad as t ON p.idTipo = t.idTipo INNER JOIN oferta as o ON o.idOferta = p.idPropiedad WHERE o.idOferta = "+id+";"
+        self.cursor.execute(query)
+        fname = self.cursor.fetchall()
+        self.cnxn.commit()
+        return fname
+
     def get_ofertas(self):
         query = 'SELECT o.disponibilidad, o.idOferta, CONCAT(c.nombre, \" \", c.apellidoP, \" \", c.apellidoM), p.direccion, t.tipo, o.estado, o.moneda, o.precio, p.superficieT, p.superficieC, p.amueblada, p.numRecamaras, p.numBaños, p.numNiveles, p.mascotas, p.posesion, p.adjudicion FROM cliente as c INNER JOIN propiedad as p ON c.idCliente = p.propietario INNER JOIN tipospropiedad as t ON p.idTipo = t.idTipo INNER JOIN oferta as o ON o.idOferta = p.idPropiedad;'
         self.cursor.execute(query)
@@ -71,6 +80,15 @@ class serverCom():
     ################################################################
     #--------------------------Deleters----------------------------#
     ################################################################
+    
     def delete_rent(self, id):
         self.cursor.execute('DELETE FROM rentas WHERE idOferta = '+id+';')
         self.cnxn.commit()
+    
+    ################################################################
+    #---------------------------Updater----------------------------#
+    ################################################################
+
+    def update_offer(self, details):
+        query = "Update cliente "
+        pass

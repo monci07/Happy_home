@@ -22,6 +22,14 @@ class offerEdit(tk.Toplevel):
 
         vcmd = (self.register(self.validate),
                 '%d', '%i', '%P', '%s', '%S', '%v', '%V', '%W')
+
+        self.idOfertaL = tk.Label(self, text="ID Oferta: ", font= tSize[0])
+        self.idOfertaE = tk.Entry(self, font = tSize[0], width=tSize[1]-20, validate = 'key', validatecommand = vcmd)
+        self.idOfertaE.bind("<FocusOut>", self.check_offer)
+        self.idOfertaE.bind("<Return>", self.check_offer)
+
+        self.idOfertaL.grid(column=0, row=0, sticky=tk.E)
+        self.idOfertaE.grid(column=1, row=0, sticky=tk.W)
         #############################################################
         ##--------------------Datos del cliente--------------------##
         #############################################################
@@ -37,14 +45,9 @@ class offerEdit(tk.Toplevel):
         self.nombreE = tk.Entry(self, font = tSize[0], width=tSize[1]) #, state = "disabled"
         self.apellidosE = tk.Entry(self, font = tSize[0], width=tSize[1])
         
-        #if aux!= None:
-        #    self.idClienteE.insert(0, aux[0])
-        #    self.nombreE.insert(0, aux[1])
-        #    self.apellidosE.insert(0, aux[2]+" "+aux[3])
-        
-        self.cliente.grid(column=0, row=0, sticky=tk.W)
+        self.cliente.grid(column=0, row=1, sticky=tk.W)
 
-        grid_positioning(1,
+        grid_positioning(2,
                          [[self.idClienteL, [self.idClienteE],3], 
                           [self.nombreL, [self.nombreE],3], 
                           [self.apellidosL, [self.apellidosE],3]])
@@ -128,9 +131,9 @@ class offerEdit(tk.Toplevel):
                 font = tSize[0])
 
 
-        self.propiedad.grid(column=0, row=4, sticky=tk.W)
+        self.propiedad.grid(column=0, row=5, sticky=tk.W)
 
-        grid_positioning(5,
+        grid_positioning(6,
             [[self.tipoL, [self.tipo], 3],
             [self.direccionL, [self.direccionE], 3],
             [self.superficieTL, [self.superficieTE], 3],
@@ -166,15 +169,15 @@ class offerEdit(tk.Toplevel):
 
         self.precioE = tk.Entry(self, font = tSize[0], width=tSize[1]-15, validate = 'key', validatecommand = vcmd)
 
-        self.oferta.grid(column=0, row=17, sticky=tk.W)
+        self.oferta.grid(column=0, row=18, sticky=tk.W)
 
-        grid_positioning(18,
+        grid_positioning(19,
             [[self.estadoL, [self.estado], 3],
             [self.monedaL, [self.moneda], 3],
             [self.precioL, [self.precioE], 3]])
 
         self.addOfferB= tk.Button(self, text = "Añadir", command=self.addOffer, height=bSize[0], width=bSize[1])
-        self.addOfferB.grid(column=0, row=21, columnspan=4, pady = 10)
+        self.addOfferB.grid(column=0, row=22, columnspan=4, pady = 10)
 
         self.protocol("WM_DELETE_WINDOW", self.on_closing)
         self.grab_set()
@@ -193,7 +196,11 @@ class offerEdit(tk.Toplevel):
                 int(value_if_allowed)
                 return True
             except ValueError:
-                return False
+                try:
+                    float(value_if_allowed)
+                    return True
+                except ValueError:
+                    return False
         else:
             return False
 
@@ -207,12 +214,48 @@ class offerEdit(tk.Toplevel):
         if cliente == None:
             self.idClienteE.config(fg="red")
             self.idClienteE.delete(0, tk.END)
-            tk.messagebox.showerror(title="Error", message="No se encontro cliente.")
 
         elif self.nombreE.get() == '' and self.apellidosE.get() == '':
             self.idClienteE.config(fg="black")
             self.nombreE.insert(0, cliente[1])
             self.apellidosE.insert(0, cliente[2]+" "+cliente[3])
+
+    def check_offer(self, event):
+        id = self.idOfertaE.get()
+        names = ['idCliente', 'tipo', 'direccion', 'superficieT', 'superficieC', 'amueblada', 'numRecamaras', 'numBaños', 'numNiveles', 'mascotas', 'posesion', 'adjudicada', 'estado', 'moneda', 'precio']
+        try:offer = self.manejador.get_specific_offer(id)
+        except:offer = None
+        print(len(names), len(offer[0]))
+        
+        if offer == None:
+            self.idOfertaE.config(fg="red")
+            self.idOfertaE.delete(0, tk.END)
+        else:
+            self.idOfertaE.config(fg="black")
+            self.data = {
+                'idOferta': id
+            }
+            for i in range(len(names)):
+                self.data[names[i]] = offer[0][i]
+            self.fill_data()
+    
+    def fill_data(self):
+        self.idClienteE.insert(0, self.data['idCliente'])
+        self.tipoE.set(self.data['tipo'])
+        self.direccionE.insert(0, self.data['direccion'])
+        self.superficieTE.insert(0, self.data['superficieT'])
+        self.superficieCE.insert(0, self.data['superficieC'])
+        self.amuebladaE.set(self.data['amueblada'])
+        self.numRecamarasE.set(self.data['numRecamaras'])
+        self.numNivelesE.set(self.data['numNiveles'])
+        self.numBañosE.set(self.data['numBaños'])
+        self.mascotasE.set(self.data['mascotas'])
+        self.posesionE.set(self.data['posesion'])
+        self.adjE.set(self.data['adjudicada'])
+        self.estadoE.set(self.data['estado'])
+        self.monedaE.set(self.data['moneda'])
+        self.precioE.insert(0, self.data['precio'])
+
 
     def addOffer(self):
         try:
