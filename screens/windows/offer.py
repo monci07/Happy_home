@@ -34,8 +34,8 @@ class offerInsert(tk.Toplevel):
         self.idClienteE = tk.Entry(self, font = tSize[0], width=tSize[1]-20, validate = 'key', validatecommand = vcmd)
         self.idClienteE.bind("<FocusOut>", self.check_client)
         self.idClienteE.bind("<Return>", self.check_client)
-        self.nombreE = tk.Entry(self, font = tSize[0], width=tSize[1]) #, state = "disabled"
-        self.apellidosE = tk.Entry(self, font = tSize[0], width=tSize[1])
+        self.nombreE = tk.Entry(self, font = tSize[0], width=tSize[1], state = "disabled") #
+        self.apellidosE = tk.Entry(self, font = tSize[0], width=tSize[1], state = "disabled")
         
         if aux!= None:
             self.idClienteE.insert(0, aux[0])
@@ -204,15 +204,20 @@ class offerInsert(tk.Toplevel):
         id = self.idClienteE.get()
         try:cliente = self.manejador.get_clients(id)
         except:cliente = None
-        if cliente == None:
+        if cliente == None and event == '<Return>':
             self.idClienteE.config(fg="red")
             self.idClienteE.delete(0, tk.END)
             tk.messagebox.showerror(title="Error", message="No se encontro cliente.")
-
-        elif self.nombreE.get() == '' and self.apellidosE.get() == '':
+        else:
             self.idClienteE.config(fg="black")
+            self.nombreE.config(state='normal')
+            self.apellidosE.config(state='normal')
+            self.nombreE.delete(0, tk.END)
+            self.apellidosE.delete(0, tk.END)
             self.nombreE.insert(0, cliente[1])
             self.apellidosE.insert(0, cliente[2]+" "+cliente[3])
+            self.nombreE.config(state='disabled')
+            self.apellidosE.config(state='disabled')
 
     def addOffer(self):
         try:

@@ -25,7 +25,6 @@ class offerEdit(tk.Toplevel):
 
         self.idOfertaL = tk.Label(self, text="ID Oferta: ", font= tSize[0])
         self.idOfertaE = tk.Entry(self, font = tSize[0], width=tSize[1]-20, validate = 'key', validatecommand = vcmd)
-        self.idOfertaE.bind("<FocusOut>", self.check_offer)
         self.idOfertaE.bind("<Return>", self.check_offer)
 
         self.idOfertaL.grid(column=0, row=0, sticky=tk.E)
@@ -40,10 +39,9 @@ class offerEdit(tk.Toplevel):
         self.apellidosL = tk.Label(self, text="Apellido(s): ", font= tSize[0])
 
         self.idClienteE = tk.Entry(self, font = tSize[0], width=tSize[1]-20, validate = 'key', validatecommand = vcmd)
-        self.idClienteE.bind("<FocusOut>", self.check_client)
         self.idClienteE.bind("<Return>", self.check_client)
-        self.nombreE = tk.Entry(self, font = tSize[0], width=tSize[1]) #, state = "disabled"
-        self.apellidosE = tk.Entry(self, font = tSize[0], width=tSize[1])
+        self.nombreE = tk.Entry(self, font = tSize[0], width=tSize[1], state = "disabled") #, state = "disabled"
+        self.apellidosE = tk.Entry(self, font = tSize[0], width=tSize[1], state = "disabled")
         
         self.cliente.grid(column=0, row=1, sticky=tk.W)
 
@@ -69,9 +67,9 @@ class offerEdit(tk.Toplevel):
         self.posesionL = tk.Label(self, text="Posesion: ", font=tSize[0])
         self.adjudL= tk.Label(self, text="¿Adjudicada?: ", font= tSize[0])
 
-        tiposP = [item for item in self.manejador.get_tipos()]
-        self.tipoE = tk.StringVar(self, value=tiposP[0])
-        self.tipo = tk.OptionMenu(self, self.tipoE, *tiposP)
+        self.tiposP = [item for item in self.manejador.get_tipos()]
+        self.tipoE = tk.StringVar(self, value=self.tiposP[0])
+        self.tipo = tk.OptionMenu(self, self.tipoE, *self.tiposP)
         self.tipo.config(font=tSize[0])
         menu = self.nametowidget(self.tipo.menuname)
         menu.config(font=tSize[0])
@@ -176,7 +174,7 @@ class offerEdit(tk.Toplevel):
             [self.monedaL, [self.moneda], 3],
             [self.precioL, [self.precioE], 3]])
 
-        self.addOfferB= tk.Button(self, text = "Añadir", command=self.addOffer, height=bSize[0], width=bSize[1])
+        self.addOfferB= tk.Button(self, text = "ACtualizar", command=self.updateOffer, height=bSize[0], width=bSize[1])
         self.addOfferB.grid(column=0, row=22, columnspan=4, pady = 10)
 
         self.protocol("WM_DELETE_WINDOW", self.on_closing)
@@ -211,22 +209,26 @@ class offerEdit(tk.Toplevel):
         id = self.idClienteE.get()
         try:cliente = self.manejador.get_clients(id)
         except:cliente = None
-        if cliente == None:
+        if cliente == None and event == '<Return>':
             self.idClienteE.config(fg="red")
             self.idClienteE.delete(0, tk.END)
-
-        elif self.nombreE.get() == '' and self.apellidosE.get() == '':
+            tk.messagebox.showerror(title="Error", message="No se encontro cliente.")
+        else:
             self.idClienteE.config(fg="black")
+            self.nombreE.config(state='normal')
+            self.apellidosE.config(state='normal')
+            self.nombreE.delete(0, tk.END)
+            self.apellidosE.delete(0, tk.END)
             self.nombreE.insert(0, cliente[1])
             self.apellidosE.insert(0, cliente[2]+" "+cliente[3])
+            self.nombreE.config(state='disabled')
+            self.apellidosE.config(state='disabled')
 
     def check_offer(self, event):
         id = self.idOfertaE.get()
-        names = ['idCliente', 'tipo', 'direccion', 'superficieT', 'superficieC', 'amueblada', 'numRecamaras', 'numBaños', 'numNiveles', 'mascotas', 'posesion', 'adjudicada', 'estado', 'moneda', 'precio']
+        names = ['idCliente', 'idTipo', 'direccion', 'superficieT', 'superficieC', 'amueblada', 'numRecamaras', 'numBaños', 'numNiveles', 'mascotas', 'posesion', 'adjunto', 'estado', 'moneda', 'precio']
         try:offer = self.manejador.get_specific_offer(id)
-        except:offer = None
-        print(len(names), len(offer[0]))
-        
+        except:offer = None        
         if offer == None:
             self.idOfertaE.config(fg="red")
             self.idOfertaE.delete(0, tk.END)
@@ -240,10 +242,18 @@ class offerEdit(tk.Toplevel):
             self.fill_data()
     
     def fill_data(self):
+        self.idClienteE.delete(0, tk.END)
         self.idClienteE.insert(0, self.data['idCliente'])
-        self.tipoE.set(self.data['tipo'])
+        for tipo in self.tiposP:
+            if tipo[1] == self.data['idTipo']:
+                self.tipoE.set(tipo)
+                self.data['idTipo'] = tipo[0]
+                break
+        self.direccionE.delete(0, tk.END)
         self.direccionE.insert(0, self.data['direccion'])
+        self.superficieTE.delete(0, tk.END)
         self.superficieTE.insert(0, self.data['superficieT'])
+        self.superficieCE.delete(0, tk.END)
         self.superficieCE.insert(0, self.data['superficieC'])
         self.amuebladaE.set(self.data['amueblada'])
         self.numRecamarasE.set(self.data['numRecamaras'])
@@ -251,22 +261,32 @@ class offerEdit(tk.Toplevel):
         self.numBañosE.set(self.data['numBaños'])
         self.mascotasE.set(self.data['mascotas'])
         self.posesionE.set(self.data['posesion'])
-        self.adjE.set(self.data['adjudicada'])
+        self.adjE.set(self.data['adjunto'])
         self.estadoE.set(self.data['estado'])
         self.monedaE.set(self.data['moneda'])
+        self.precioE.delete(0, tk.END)
         self.precioE.insert(0, self.data['precio'])
 
 
-    def addOffer(self):
+    def updateOffer(self):
         try:
-            cliente = (self.idClienteE.get())
-            propiedad = {"tipo":list(self.tipoE.get())[1], "direccion":self.direccionE.get(), "superficieT":(self.superficieTE.get()), "superficieC":(self.superficieCE.get()), 
-                         "amueblada":self.amuebladaE.get(), "numRecamaras":str(self.numRecamarasE.get()), "numNiveles":str(self.numNivelesE.get()), "numBaños":str(self.numBañosE.get()), 
-                         "mascotas":str(self.mascotasE.get()), "posesion":self.posesionE.get(), "adjunto":str(self.adjE.get())}
+            prop = {'idCliente': self.idClienteE.get(), 'idTipo':list(self.tipoE.get())[1], "direccion":self.direccionE.get(), "superficieT":(self.superficieTE.get()), 
+                    "superficieC":(self.superficieCE.get()), "amueblada":self.amuebladaE.get(), "numRecamaras":str(self.numRecamarasE.get()), "numNiveles":str(self.numNivelesE.get()), 
+                    "numBaños":str(self.numBañosE.get()), "mascotas":str(self.mascotasE.get()), "posesion":self.posesionE.get(), "adjunto":str(self.adjE.get())}
             oferta = {"estado":self.estadoE.get(), 
                       "moneda":self.monedaE.get(), 
                       "precio":self.precioE.get()}
-            print(self.manejador.insert_offer(cliente, propiedad, oferta))
+            tables = (['oferta', oferta], ['propiedad', prop])
+            strings = ["direccion", "amueblada", "posesion", "estado", "moneda"]
+            for table in tables:
+                query = 'UPDATE '+table[0]+' SET '
+                for key in table[1].keys():
+                    if table[1][key] != str(self.data[key]):
+                        if key not in strings: query += key+' = '+table[1][key]+', '
+                        else: query += key+' = "'+table[1][key]+'", '
+                if table[0] == 'oferta': query = query[:-2]+' WHERE idOferta = '+self.data['idOferta']+';'
+                else: query = query[:-2]+' WHERE idPropiedad = '+self.data['idOferta']+';'
+                if 'SE ' not in query: self.manejador.update(query)
             self.destroy()
         except Exception as e:
             tk.messagebox.showerror(title="Error", message="Faltaron campos por llenar.")

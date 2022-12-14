@@ -89,6 +89,6 @@ class serverCom():
     #---------------------------Updater----------------------------#
     ################################################################
 
-    def update_offer(self, details):
-        query = "Update cliente "
-        pass
+    def update(self, query):
+        self.cursor.execute(query)
+        self.cnxn.commit()
