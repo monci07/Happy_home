@@ -42,12 +42,12 @@ class userEdit(tk.Toplevel):
         self.Añadir= tk.Button(self, text = "Actualizar", command=self.updateCustomer, height=bSize[0], width=bSize[1], font= tSize[0])
         
         grid_positioning(0,
-            [[self.idClienteL,[self.idClienteE],1],
-             [self.nombreL,[self.nombreE],1], 
-             [self.apellidoPL,[self.apellidoPE], 1],
-             [self.apellidoML,[self.apellidoME], 1],
-             [self.telL,[self.telE],1],
-             [self.emailL,[self.emailE],1]])
+            [[self.idClienteL,self.idClienteE],
+             [self.nombreL,self.nombreE], 
+             [self.apellidoPL,self.apellidoPE],
+             [self.apellidoML,self.apellidoME],
+             [self.telL,self.telE],
+             [self.emailL,self.emailE]])
         
         self.Añadir.grid(column=0, row=6, columnspan=2)
 

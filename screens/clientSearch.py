@@ -28,7 +28,7 @@ def clientShowMenu(self):
     self.clientsResult = ttk.Treeview(self, 
                                         columns = ("ID", "Nombre", "Apellido P.", "Apellido M.", "Fecha R.", "Telefono", "Correo"), 
                                         show = "headings",
-                                        height = 30)
+                                        height = 33)
     
     style = ttk.Style()
     style.configure("Treeview", font=self.tSize[0])
@@ -39,9 +39,9 @@ def clientShowMenu(self):
     self.clientsResult.bind('<Button-1>', C_event_handler)
     
     grid_positioning(0,
-                        [[self.cIdL, [self.cIdE], 1],
-                        [self.cNombreL, [self.cNombreE], 1],
-                        [self.cApellidoL, [self.cApellidoE], 1]])        
+                        [[self.cIdL, self.cIdE],
+                        [self.cNombreL, self.cNombreE],
+                        [self.cApellidoL, self.cApellidoE]])
     
     self.filtro.grid(column=0, row=3, columnspan=2)
     self.volver.grid(column=0, row=4, columnspan=2)

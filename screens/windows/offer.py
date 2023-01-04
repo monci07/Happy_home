@@ -18,7 +18,7 @@ class offerInsert(tk.Toplevel):
         self.manejador = server
         aux = self.manejador.get_clients(client) if client != None else None
 
-        config_grid(self,[[i,1] for i in range(0,21)], [[i,1] for i in range(0,4)])
+        config_grid(self,[[i,1] for i in range(0,21)], [[i,1] for i in range(0,3)])
 
         vcmd = (self.register(self.validate),
                 '%d', '%i', '%P', '%s', '%S', '%v', '%V', '%W')
@@ -45,9 +45,9 @@ class offerInsert(tk.Toplevel):
         self.cliente.grid(column=0, row=0, sticky=tk.W)
 
         grid_positioning(1,
-                         [[self.idClienteL, [self.idClienteE],3], 
-                          [self.nombreL, [self.nombreE],3], 
-                          [self.apellidosL, [self.apellidosE],3]])
+                         [[self.idClienteL, self.idClienteE], 
+                          [self.nombreL, self.nombreE], 
+                          [self.apellidosL, self.apellidosE]])
 
         #############################################################
         ##------------------Datos de la propiedad------------------##
@@ -77,37 +77,46 @@ class offerInsert(tk.Toplevel):
         self.superficieTE = tk.Entry(self, font = tSize[0], width=tSize[1]-15, validate = 'key', validatecommand = vcmd)
         self.superficieCE = tk.Entry(self, font = tSize[0], width=tSize[1]-15, validate = 'key', validatecommand = vcmd)
 
+        f1 = tk.Frame(self)
         self.amuebladaE = tk.StringVar(value="Si")
-        self.amuebladaEO1= tk.Radiobutton(self, 
+        self.amuebladaEO1= tk.Radiobutton(f1, 
                text="Si",
                variable=self.amuebladaE, 
                value="Si",
                font = tSize[0])
-        self.amuebladaEO2= tk.Radiobutton(self,
+        self.amuebladaEO2= tk.Radiobutton(f1,
                 text="No",
                 variable=self.amuebladaE,
                 value="No",
                 font = tSize[0])
-        self.amuebladaEO3= tk.Radiobutton(self,
+        self.amuebladaEO3= tk.Radiobutton(f1,
                 text="Semi",
                 variable=self.amuebladaE, 
                 value="Semi",
                 font = tSize[0])
 
+        self.amuebladaEO1.grid(row=0, sticky=tk.W)
+        self.amuebladaEO2.grid(row=1, sticky=tk.W)
+        self.amuebladaEO3.grid(row=2, sticky=tk.W)
+
         self.numRecamarasE = tk.Scale(self, from_=1, to=20, orient=tk.HORIZONTAL, font = tSize[0], width=tSize[1])
         self.numBañosE = tk.Scale(self, from_=1, to=20, orient=tk.HORIZONTAL, font = tSize[0], width=tSize[1])
         self.numNivelesE = tk.Scale(self, from_=1, to=10, orient=tk.HORIZONTAL, font = tSize[0], width=tSize[1])
         self.mascotasE = tk.IntVar(value = 1)
-        self.mascotasEO1= tk.Radiobutton(self,
+        f2 = tk.Frame(self)
+        self.mascotasEO1= tk.Radiobutton(f2,
                 text="Si",
                 variable=self.mascotasE,
                 value=1,
                 font = tSize[0])
-        self.mascotasEO2= tk.Radiobutton(self,
+        self.mascotasEO2= tk.Radiobutton(f2,
                 text="No",
                 variable=self.mascotasE,
                 value=0,
                 font = tSize[0])
+
+        self.mascotasEO1.grid(row=0)
+        self.mascotasEO2.grid(row=1)
 
         self.posesionE = tk.StringVar(value = "Regular")
         self.posesionT = tk.OptionMenu(self, self.posesionE, "Regular", "Irregular")
@@ -115,33 +124,36 @@ class offerInsert(tk.Toplevel):
         menu = self.nametowidget(self.posesionT.menuname)
         menu.config(font=tSize[0])
 
+        f3 = tk.Frame(self)
         self.adjE = tk.IntVar(value = 1)
-        self.adjEO1= tk.Radiobutton(self,
+        self.adjEO1= tk.Radiobutton(f3,
                 text="Si",
                 variable=self.adjE,
                 value=1,
                 font = tSize[0])
-        self.adjEO2= tk.Radiobutton(self,
+        self.adjEO2= tk.Radiobutton(f3,
                 text="No",
                 variable=self.adjE,
                 value=0,
                 font = tSize[0])
 
+        self.adjEO1.grid(row=0)
+        self.adjEO2.grid(row=1)
 
         self.propiedad.grid(column=0, row=4, sticky=tk.W)
 
         grid_positioning(5,
-            [[self.tipoL, [self.tipo], 3],
-            [self.direccionL, [self.direccionE], 3],
-            [self.superficieTL, [self.superficieTE], 3],
-            [self.superficieCL, [self.superficieCE], 3],
-            [self.amuebladaL, [self.amuebladaEO1, self.amuebladaEO2, self.amuebladaEO3], 1],
-            [self.numRecamarasL, [self.numRecamarasE], 3],
-            [self.numBañosL, [self.numBañosE], 3],
-            [self.numNivelesL, [self.numNivelesE], 3],
-            [self.mascotasL, [self.mascotasEO1, self.mascotasEO2], 1],
-            [self.posesionL, [self.posesionT], 3],
-            [self.adjudL, [self.adjEO1, self.adjEO2], 1]])
+            [[self.tipoL, self.tipo],
+            [self.direccionL, self.direccionE],
+            [self.superficieTL, self.superficieTE],
+            [self.superficieCL, self.superficieCE],
+            [self.amuebladaL, f1],
+            [self.numRecamarasL, self.numRecamarasE],
+            [self.numBañosL, self.numBañosE],
+            [self.numNivelesL, self.numNivelesE],
+            [self.mascotasL, f2],
+            [self.posesionL, self.posesionT],
+            [self.adjudL, f3]])
 
 
         ##############################################################
@@ -169,9 +181,9 @@ class offerInsert(tk.Toplevel):
         self.oferta.grid(column=0, row=17, sticky=tk.W)
 
         grid_positioning(18,
-            [[self.estadoL, [self.estado], 3],
-            [self.monedaL, [self.moneda], 3],
-            [self.precioL, [self.precioE], 3]])
+            [[self.estadoL, self.estado],
+            [self.monedaL, self.moneda],
+            [self.precioL, self.precioE]])
 
         self.addOfferB= tk.Button(self, text = "Añadir", command=self.addOffer, height=bSize[0], width=bSize[1])
         self.addOfferB.grid(column=0, row=21, columnspan=4, pady = 10)

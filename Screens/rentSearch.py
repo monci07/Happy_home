@@ -8,7 +8,7 @@ def rentShowMenu(self):
     mainMenuInvisible(self)
     self.geometry(searchSize)
     self.title("Happy home - Rent Search")
-    config_grid(self,[[i,0] for i in range(0,4)], [[i,0] for i in range(0,3)])
+    config_grid(self,[[i,0] for i in range(0,7)], [[i,0] for i in range(0,3)])
     
     self.bInquilinoL = tk.Label(self, text = "Inquilino:", font = self.tSize[0])
 
@@ -27,7 +27,7 @@ def rentShowMenu(self):
     self.rentResult = ttk.Treeview(self, 
                                    columns = ("Propietario", "Inquilino", "Direccion","Fecha de Inicio"),
                                    show = "headings",
-                                   height = 30,
+                                   height = 33,
                                    selectmode="browse")
     style = ttk.Style()
     style.configure("Treeview", font=self.tSize[0])
@@ -59,12 +59,12 @@ def rentShowMenu(self):
     self.bInquilinoL.grid(column=0, row=0, columnspan=2, sticky="w", pady=4)
 
     grid_positioning(1,[
-        [self.bInqNameL, [self.bInqNameE],1]])
+        [self.bInqNameL, self.bInqNameE]])
 
     self.bPropietarioL.grid(column=0, row=2, columnspan=2, sticky="w", pady=4)
     
     grid_positioning(3,[ 
-        [self.bPropNameL, [self.bPropNameE],1]])
+        [self.bPropNameL, self.bPropNameE]])
 
     self.rentResult.grid(column=2, row=0, rowspan=100, sticky="ns", padx=4)
     self.rentResult.configure(xscrollcommand = horzscrlbar.set)

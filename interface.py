@@ -3,7 +3,7 @@ from tkinter import ttk
 import pyperclip
 
 mainSize = "580x425"
-searchSize = "1325x635"
+searchSize = "1325x723"
 newOffer = "550x750"
 newClient = "400x200"
 editOffer = "550x850"
@@ -19,8 +19,7 @@ def grid_positioning(init=int, list=list):
     '''
     for i in range(len(list)):
         list[i][0].grid(column=0, row=i+init, sticky=tk.E)
-        for j in range(len(list[i][1])):
-            list[i][1][j].grid(column=j+1, row=i+init, sticky=tk.W, columnspan=list[i][2])
+        list[i][1].grid(column=1, row=i+init, sticky=tk.W)
 
 def config_grid(self, rows: list, columns: list):
     '''
@@ -51,9 +50,9 @@ def mainMenuVisible(self):
     '''
     self.geometry(mainSize)
     self.title("Happy home - Main Menu")
-    config_grid(self,[[i, 1] for i in range(0,3)], [[i, 1] for i in range(0, 3)])
+    config_grid(self,[[i, 1] for i in range(0,4)], [[i, 1] for i in range(0, 1)])
     for i in range(len(self.mainMenu)):
-        self.mainMenu[i].grid(column=0, row=i, columnspan=3)
+        self.mainMenu[i].grid(row=i, columnspan=3)
 
 def buscarOMenuInvisible(self):
     '''

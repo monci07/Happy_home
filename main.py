@@ -73,19 +73,19 @@ class App(tk.Tk):
         
         self.mainMenu = [f1, f2, f3]
 
-        config_grid(self,[[i, 1] for i in range(0,4)], [[i, 1] for i in range(0, 3)])
+        config_grid(self,[[i, 1] for i in range(0,3)], [[i, 1] for i in range(0, 1)])
 
         pad = 10
-        f1.grid(column=0, row=0, columnspan=3)
+        f1.grid(column=0, row=0)
         self.offersAdd.grid(column=0, row = 0, padx = pad)
         self.clientsAdd.grid(column=1, row = 0, padx = pad)
 
-        f2.grid(column=0, row=1, columnspan=3)
+        f2.grid(column=0, row=1)
         self.clientsSearch.grid(column=0, row = 0, padx = pad)
         self.offersSearch.grid(column=1, row = 0, padx = pad)
         self.rentsSearch.grid(column=3, row = 0, padx = pad)
         
-        f3.grid(column=0, row=2, columnspan=3)
+        f3.grid(column=0, row=2)
         self.editOffer.grid(column=0, row = 0, padx = pad)
         self.editClient.grid(column=1, row = 0, padx = pad)
 

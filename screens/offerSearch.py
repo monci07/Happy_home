@@ -10,7 +10,7 @@ def offerShowMenu(self):
     mainMenuInvisible(self)
     self.geometry(searchSize)
     self.title("Happy home - Offers Search")
-    config_grid(self,[[i,0] for i in range(0,4)], [[i,0] for i in range(0,3)])
+    config_grid(self,[[i,0] for i in range(0,19)], [[i,0] for i in range(0,3)])
 
     self.interesado = tk.Label(self, text = "Interesado:", font =self.tSize[0])
 
@@ -44,9 +44,12 @@ def offerShowMenu(self):
     menu.config(font=self.tSize[0])
     
     self.rangeL = tk.Label(self, text = "Rango P.:", font =self.tSize[0])
-    self.rangeE1 = tk.Entry(self, font =self.tSize[0], width=self.tSize[1], validate = 'key', validatecommand = self.vcmdInt)
-    self.rangeE2 = tk.Entry(self, font =self.tSize[0], width=self.tSize[1], validate = 'key', validatecommand = self.vcmdInt)
-    
+    f4 = tk.Frame(self)
+    self.rangeE1 = tk.Entry(f4, font =self.tSize[0], width=self.tSize[1], validate = 'key', validatecommand = self.vcmdInt)
+    self.rangeE2 = tk.Entry(f4, font =self.tSize[0], width=self.tSize[1], validate = 'key', validatecommand = self.vcmdInt)
+    self.rangeE1.grid(row = 0, column=0)
+    self.rangeE2.grid(row = 0, column=1)
+
     self.estadoL = tk.Label(self, text = "Estado:", font =self.tSize[0])
     self.estadoE = tk.StringVar()
     self.estadoT = tk.OptionMenu(self, self.estadoE, "Venta", "Renta")
@@ -79,17 +82,21 @@ def offerShowMenu(self):
     self.numNivelesE = tk.Entry(self, font =self.tSize[0], width=self.tSize[1], validate = 'key', validatecommand = self.vcmdInt)
     
     self.mascotasL = tk.Label(self, text = "Mascotas:", font =self.tSize[0])
-    self.mascotasE = tk.IntVar(value = 2)
-    self.mascotasEO1= tk.Radiobutton(self,
+    f2 = tk.Frame(self)
+    self.mascotasE = tk.IntVar(value = 1)
+    self.mascotasEO1= tk.Radiobutton(f2,
             text="Si",
             variable=self.mascotasE,
             value=1,
             font = self.tSize[0])
-    self.mascotasEO2= tk.Radiobutton(self,
+    self.mascotasEO2= tk.Radiobutton(f2,
             text="No",
             variable=self.mascotasE,
             value=0,
-            font = self.tSize[0])        
+            font = self.tSize[0])
+
+    self.mascotasEO1.grid(row=0, sticky = tk.W)
+    self.mascotasEO2.grid(row=1, sticky = tk.W)
     
     self.posesionL = tk.Label(self, text = "Posesion:", font =self.tSize[0])
     self.posesionE = tk.StringVar(self)
@@ -99,24 +106,28 @@ def offerShowMenu(self):
     menu.config(font=self.tSize[0])
     
     self.adjL = tk.Label(self, text = "Adjudicada:", font =self.tSize[0])
-    self.adjE = tk.IntVar(value = 2)
-    self.adjEO1= tk.Radiobutton(self,
+    f3 = tk.Frame(self)
+    self.adjE = tk.IntVar(value = 1)
+    self.adjEO1= tk.Radiobutton(f3,
             text="Si",
             variable=self.adjE,
             value=1,
             font = self.tSize[0])
-    self.adjEO2= tk.Radiobutton(self,
+    self.adjEO2= tk.Radiobutton(f3,
             text="No",
             variable=self.adjE,
             value=0,
             font = self.tSize[0])
+    self.adjEO1.grid(row=0, sticky = tk.W)
+    self.adjEO2.grid(row=1, sticky = tk.W)
     
     #################################################
 
-    self.offersResult = ttk.Treeview(self, 
+    f5 = tk.Frame(self, width = 10)
+    self.offersResult = ttk.Treeview(f5, 
                                         columns = ("ID", "Propietario", "Direccion", "Tipo", "Estado", "Moneda", "Precio", "S. Terreno(m2)", "S. Constr.(m2)","Amueblado", "Recamaras", "Baños", "Niveles", "Mascotas", "Posesion", "Adjudicada"), 
                                         show = "headings",
-                                        height = 30,
+                                        height = 33,
                                         selectmode="browse")                            
     style = ttk.Style()
     style.configure("Treeview", font=self.tSize[0])
@@ -138,13 +149,14 @@ def offerShowMenu(self):
                                     110, #"Posesion"
                                     110]) #"Adjudicada"        
     
-    verscrlbar = ttk.Scrollbar(self, orient ="vertical", command = self.offersResult.yview)
-    horzscrlbar = ttk.Scrollbar(self, orient ="horizontal", command = self.offersResult.xview)
+    verscrlbar = ttk.Scrollbar(f5, orient ="vertical", command = self.offersResult.yview)
+    horzscrlbar = ttk.Scrollbar(f5, orient ="horizontal", command = self.offersResult.xview)
     self.offersResult.bind('<Button-1>', O_event_handler)        
     
 
     f1 = tk.Frame(self)
-    self.filroO = tk.Button(f1, text = "Filtrar", font =self.tSize[0], command = lambda: offerSearch(self), width=10)
+    #self.filroO = tk.Button(f1, text = "Filtrar", font =self.tSize[0], command = lambda: offerSearch(self), width=10)
+    self.filroO = tk.Button(f1, text = "Filtrar", font =self.tSize[0], command = lambda: test(self), width=10)
     self.cerrarTrato = tk.Button(f1, text = "Cerrar Trato", font =self.tSize[0], command = lambda: cerrarTrato_handler(self), width=10)
     self.volver = tk.Button(f1, text = "Volver", font =self.tSize[0], command = lambda:buscarOMenuInvisible(self), width=10)
     
@@ -156,59 +168,61 @@ def offerShowMenu(self):
                         self.interesL, self.interesE,
                         self.filtros,
                         self.monedaL, self.monedaT,
-                        self.rangeL, self.rangeE1, self.rangeE2,
+                        self.rangeL, f4,
                         self.tipoL, self.tipo,
                         self.estadoL, self.estadoT,
                         self.amuebladoL, self.amueblado,
                         self.numRecamarasL, self.numRecamarasE,
                         self.numBañosL, self.numBañosE,
                         self.numNivelesL, self.numNivelesE,
-                        self.mascotasL, self.mascotasEO1, self.mascotasEO2,
+                        self.mascotasL, f2,
                         self.posesionL, self.posesionT,
-                        self.adjL, self.adjEO1, self.adjEO2,
+                        self.adjL, f3,
                         self.offersResult, verscrlbar, horzscrlbar,
-                        f1, self.cerrarTrato, self.filroO , self.volver]        
+                        f1]        
     
     self.interesado.grid(column=0, row=0, sticky=tk.W)
     
     grid_positioning(1,
-                        [[self.cIdL, [self.cIdE], 3],
-                        [self.cNombreL, [self.cNombreE], 3]])
+                        [[self.cIdL, self.cIdE],
+                        [self.cNombreL, self.cNombreE]])
     
     self.oferta.grid(column=0, row=3, sticky=tk.W)
     
     grid_positioning(4,
-                        [[self.oIdL, [self.oIdE], 3],
-                        [self.interesL, [self.interesE], 3]])
+                        [[self.oIdL, self.oIdE],
+                        [self.interesL, self.interesE]])
     
     self.filtros.grid(column=0, row=7, sticky=tk.W)
     
     grid_positioning(8,
-                        [[self.monedaL, [self.monedaT], 3],
-                        [self.rangeL, [self.rangeE1, self.rangeE2], 1],
-                        [self.tipoL, [self.tipo], 3],
-                        [self.estadoL, [self.estadoT], 3],
-                        [self.amuebladoL, [self.amueblado], 1],
-                        [self.numRecamarasL, [self.numRecamarasE], 3],
-                        [self.numBañosL, [self.numBañosE], 3],
-                        [self.numNivelesL, [self.numNivelesE], 3],
-                        [self.mascotasL, [self.mascotasEO1, self.mascotasEO2], 1],
-                        [self.posesionL, [self.posesionT], 3],
-                        [self.adjL, [self.adjEO1, self.adjEO2], 1]])        
+                        [[self.monedaL, self.monedaT],
+                        [self.rangeL, f4],
+                        [self.tipoL, self.tipo],
+                        [self.estadoL, self.estadoT],
+                        [self.amuebladoL, self.amueblado],
+                        [self.numRecamarasL, self.numRecamarasE],
+                        [self.numBañosL, self.numBañosE],
+                        [self.numNivelesL, self.numNivelesE],
+                        [self.mascotasL, f2],
+                        [self.posesionL, self.posesionT],
+                        [self.adjL, f3]])    
     
-    self.offersResult.grid(column=3, row=0, rowspan=100)        
-    verscrlbar.grid(column=3, row=0, rowspan=100, sticky='nse')
+    f5.grid(column=3, row=0, rowspan=20)        
+    self.offersResult.grid(column=0, row=0, columnspan=2)        
+    verscrlbar.grid(column=0, row=0, rowspan=100, sticky='nsw')
     self.offersResult.configure(yscrollcommand = verscrlbar.set)
-    horzscrlbar.grid(column=3, row=19, columnspan=100, sticky='ews')
+    horzscrlbar.grid(column=0, row=0, sticky='ews', columnspan=0)
     self.offersResult.configure(xscrollcommand = horzscrlbar.set)
-    
+    #f5.configure(xscrollcommand = horzscrlbar.set)
+
     for offer in self.manejador.get_ofertas():
         if offer[0] != 0:
             data = fix_data(offer)
             self.offersResult.insert("", tk.END, iid=data[0], values = data)            
     
     f1.grid(column=0, row=19, columnspan=3)
-    self.volver.grid(row=0,column=0)
+    self.volver.grid(row=0,column=0) 
     self.cerrarTrato.grid(row=0,column=1, padx=10)
     self.filroO.grid(row=0,column=2)
 
@@ -245,12 +259,9 @@ def cerrarTrato_handler(self):
     propietario = self.offersResult.item(id)['values'][1]
     if id != '' and val(interesado, propietario) and self.interesE.get() != '':
         self.manejador.consultar('UPDATE oferta SET disponibilidad = 0 WHERE idOferta = '+id+';')
-        if(self.offersResult.item(id)['values'][4]=='Renta'):check_renta(self,id,self.cIdE.get())
+        if(self.offersResult.item(id)['values'][4]=='Renta'):self.manejador.consultar('INSERT INTO rentas (idOferta, idCliente, fechaInicio) VALUES ('+id+', '+self.cIdE.get()+', CURDATE());')
         self.offersResult.delete(id)
       
-def check_renta(self, idOferta, idCliente):
-    print(self.manejador.consultar('INSERT INTO rentas (idOferta, idCliente, fechaInicio) VALUES ('+idOferta+', '+idCliente+', CURDATE());'))
-
 def offerSearch(self):
     try:
         offers= filterOffers()
@@ -300,6 +311,27 @@ def filterOffers():
             if f < len(offer)-1: query += ' AND'
         query += ';'
         return Self.manejador.consultar(query)
+
+def test(self):
+    prop = {"p.amueblada":self.amuebladaE.get(), "p.numRecamaras":str(self.numRecamarasE.get()), "p.numNiveles":str(self.numNivelesE.get()), 
+            "p.numBaños":str(self.numBañosE.get()), "p.mascotas":str(self.mascotasE.get()), "p.posesion":self.posesionE.get(), "p.adjudicion":str(self.adjE.get())}
+    oferta = {"o.estado":self.estadoE.get(), 
+              "o.moneda":self.monedaE.get(), 
+              "precioL":self.rangeE1.get(),
+              "precioH":self.rangeE2.get()}
+    tables = (['oferta', oferta], ['propiedad', prop])
+    strings = ["p.amueblada", "p.posesion", "o.estado", "o.moneda"]
+    query = 'SELECT o.disponibilidad, o.idOferta, CONCAT(c.nombre, \" \", c.apellidoP, \" \", c.apellidoM), p.direccion, t.tipo, o.estado, o.moneda, o.precio, p.superficieT, p.superficieC, p.amueblada, p.numRecamaras, p.numBaños, p.numNiveles, p.mascotas, p.posesion, p.adjudicion FROM cliente as c INNER JOIN propiedad as p ON c.idCliente = p.propietario INNER JOIN tipospropiedad as t ON p.idTipo = t.idTipo INNER JOIN oferta as o ON o.idOferta = p.idPropiedad WHERE '
+    for table in tables:
+        for key in table[1].keys():
+            if str(table[1][key]) != "":
+                if (key == "precioL" and table[1][key] != ""): query += 'o.precio >= '+table[1][key]
+                elif (key == "precioH" and table[1][key] != ""): query += 'o.precio <= '+table[1][key]
+                elif key not in strings: query += key+' = '+table[1][key]
+                else: query += key+' = "'+table[1][key]+'"'
+                query += ' AND '
+    query = query[:-5]+';'
+    print(self.manejador.consultar(query))
 
 def lookup(filters, name, entrie):
     try:

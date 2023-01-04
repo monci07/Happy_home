@@ -37,11 +37,11 @@ class userInsert(tk.Toplevel):
         self.Añadir.grid(column=0, row=5, columnspan=2)
         
         grid_positioning(0,
-            [[self.nombreL,[self.nombreE],1], 
-             [self.apellidoPL,[self.apellidoPE], 1],
-             [self.apellidoML,[self.apellidoME], 1],
-             [self.telL,[self.telE],1],
-             [self.emailL,[self.emailE],1]])
+            [[self.nombreL,self.nombreE],
+             [self.apellidoPL,self.apellidoPE],
+             [self.apellidoML,self.apellidoME],
+             [self.telL,self.telE],
+             [self.emailL,self.emailE]])
         
         self.protocol("WM_DELETE_WINDOW", self.on_closing)
         self.grab_set()
@@ -50,6 +50,9 @@ class userInsert(tk.Toplevel):
 
     def validate(self, action, index, value_if_allowed,
                        prior_value, text, validation_type, trigger_type, widget_name):
+        ''' 
+            This method is used to validate the input of the user
+        '''
         if value_if_allowed=='': return True
         if value_if_allowed:
             try:
@@ -61,6 +64,11 @@ class userInsert(tk.Toplevel):
             return False
 
     def addCustomer(self):
+        ''' 
+            The method is used to add a client to the database
+            Parameters:
+                self: the window itself
+        '''
         nombre=[self.nombreE.get(), self.apellidoPE.get(), self.apellidoME.get()]
         tel = self.telE.get()
         mail=self.emailE.get()
@@ -74,5 +82,8 @@ class userInsert(tk.Toplevel):
             
 
     def on_closing(self):
+        '''
+            This method is used to close the window
+        '''
         if messagebox.askokcancel("Quit", "Quieres salir?"):
             self.destroy()
