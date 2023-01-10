@@ -8,6 +8,7 @@ newOffer = "550x750"
 newClient = "400x200"
 editOffer = "550x850"
 editClient = "400x225"
+offerInfo = "560x325"
 bHeight = 5
 
 def grid_positioning(init=int, list=list):
@@ -39,8 +40,7 @@ def mainMenuInvisible(self):
         Parameters:
             self (tk.Tk): Main window
     '''
-    for item in self.mainMenu:
-        item.grid_forget()
+    self.frameMainMenu.grid_forget()
 
 def mainMenuVisible(self):
     '''
@@ -50,9 +50,7 @@ def mainMenuVisible(self):
     '''
     self.geometry(mainSize)
     self.title("Happy home - Main Menu")
-    config_grid(self,[[i, 1] for i in range(0,4)], [[i, 1] for i in range(0, 1)])
-    for i in range(len(self.mainMenu)):
-        self.mainMenu[i].grid(row=i, columnspan=3)
+    self.frameMainMenu.grid(column=0, row=0)
 
 def buscarOMenuInvisible(self):
     '''
@@ -84,7 +82,7 @@ def buscarRMenuInvisible(self):
         item.grid_forget()
     mainMenuVisible(self)
 
-def tree_handler(tree=ttk.Treeview, lWith=list):
+def tree_handler(tree:ttk.Treeview, lWith: list):
     '''
         Handles the treeview widget
         Parameters:
@@ -92,5 +90,5 @@ def tree_handler(tree=ttk.Treeview, lWith=list):
             lWith (list): List of widths for each column
     '''
     for i in range(len(tree['columns'])):
-        tree.column(tree['columns'][i],anchor=tk.CENTER, width=lWith[i])
+        tree.column(tree['columns'][i], anchor=tk.CENTER, width=lWith[i], stretch=False)
         tree.heading(tree['columns'][i], text=tree['columns'][i])

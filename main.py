@@ -38,17 +38,19 @@ class App(tk.Tk):
 
         self.manejador = server.serverCom()
 
-        f1 = tk.Frame(self)
-        self.offersAdd= tk.Button(f1, text = "Agregar ofertas", 
+        self.frameMainMenu = tk.Frame(self)
+
+        frameM1 = tk.Frame(self.frameMainMenu)
+        self.offersAdd= tk.Button(frameM1, text = "Agregar ofertas", 
                                   font =self.tSize[0], command = self.addOffer, 
                                   height=bHeight, width=15)
-        self.clientsAdd= tk.Button(f1, text = "Agregar clientes", 
+        self.clientsAdd= tk.Button(frameM1, text = "Agregar clientes", 
                                    font =self.tSize[0], command = self.addClient, 
                                    height=bHeight, width=15)
         
         ########################################
         
-        f2 = tk.Frame(self)
+        f2 = tk.Frame(self.frameMainMenu)
         self.offersSearch= tk.Button(f2, text = "Buscar ofertas", 
                                      font =self.tSize[0], command = lambda: offerSearch.offerShowMenu(self), 
                                      height=bHeight, width=15)
@@ -63,7 +65,7 @@ class App(tk.Tk):
         
         ########################################
         
-        f3 = tk.Frame(self)
+        f3 = tk.Frame(self.frameMainMenu)
         self.editOffer= tk.Button(f3, text = "Editar oferta", 
                                   font =self.tSize[0], command = self.editOffer, 
                                   height=bHeight, width=15)
@@ -71,12 +73,13 @@ class App(tk.Tk):
                                    font =self.tSize[0], command = self.editClient,
                                    height=bHeight, width=15)
         
-        self.mainMenu = [f1, f2, f3]
+        self.mainMenu = [frameM1, f2, f3]
 
-        config_grid(self,[[i, 1] for i in range(0,3)], [[i, 1] for i in range(0, 1)])
+        config_grid(self.frameMainMenu,[[i, 1] for i in range(0,3)], [[i, 1] for i in range(0, 1)])
 
         pad = 10
-        f1.grid(column=0, row=0)
+        self.frameMainMenu.grid(column=0, row=0)
+        frameM1.grid(column=0, row=0)
         self.offersAdd.grid(column=0, row = 0, padx = pad)
         self.clientsAdd.grid(column=1, row = 0, padx = pad)
 
@@ -125,16 +128,16 @@ class App(tk.Tk):
 #------------------windows--------------------#
 ###############################################
     def addClient(self):
-        self.newWindow = client.userInsert(self.manejador)
+        client.userInsert(self.manejador)
     
     def addOffer(self):
-        self.newWindow = offer.offerInsert(server = self.manejador)
+        offer.offerInsert(server = self.manejador)
     
     def editOffer(self):
-        self.newWindow = offerEdit.offerEdit(self.manejador)
+        offerEdit.offerEdit(self.manejador)
 
     def editClient(self):
-        self.newWindow = clientEdit.userEdit(self.manejador)
+        clientEdit.userEdit(self.manejador)
 
 if __name__ == '__main__':
     #creacion de ventana principal

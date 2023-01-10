@@ -8,7 +8,7 @@ class userInsert(tk.Toplevel):
         ''' window for addign a client '''
         bSize = [1, 10]
         tSize = [8, 15]
-        tk.Toplevel.__init__(self)
+        super().__init__()
         self.title("Happy home - New User")
         self.geometry(newClient)
         self.resizable(False,False)

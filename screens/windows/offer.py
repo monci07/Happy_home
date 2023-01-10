@@ -10,7 +10,7 @@ class offerInsert(tk.Toplevel):
         global Self
         bSize = [1, 10]
         tSize = [8, 25]
-        tk.Toplevel.__init__(self)
+        super().__init__()
         self.title("Happy home - New Offer")
         self.geometry(newOffer)
         self.resizable(False,False)
@@ -77,19 +77,19 @@ class offerInsert(tk.Toplevel):
         self.superficieTE = tk.Entry(self, font = tSize[0], width=tSize[1]-15, validate = 'key', validatecommand = vcmd)
         self.superficieCE = tk.Entry(self, font = tSize[0], width=tSize[1]-15, validate = 'key', validatecommand = vcmd)
 
-        f1 = tk.Frame(self)
+        frameO1 = tk.Frame(self)
         self.amuebladaE = tk.StringVar(value="Si")
-        self.amuebladaEO1= tk.Radiobutton(f1, 
+        self.amuebladaEO1= tk.Radiobutton(frameO1, 
                text="Si",
                variable=self.amuebladaE, 
                value="Si",
                font = tSize[0])
-        self.amuebladaEO2= tk.Radiobutton(f1,
+        self.amuebladaEO2= tk.Radiobutton(frameO1,
                 text="No",
                 variable=self.amuebladaE,
                 value="No",
                 font = tSize[0])
-        self.amuebladaEO3= tk.Radiobutton(f1,
+        self.amuebladaEO3= tk.Radiobutton(frameO1,
                 text="Semi",
                 variable=self.amuebladaE, 
                 value="Semi",
@@ -147,7 +147,7 @@ class offerInsert(tk.Toplevel):
             [self.direccionL, self.direccionE],
             [self.superficieTL, self.superficieTE],
             [self.superficieCL, self.superficieCE],
-            [self.amuebladaL, f1],
+            [self.amuebladaL, frameO1],
             [self.numRecamarasL, self.numRecamarasE],
             [self.numBañosL, self.numBañosE],
             [self.numNivelesL, self.numNivelesE],

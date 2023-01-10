@@ -6,11 +6,11 @@ from interface import *
 class userEdit(tk.Toplevel):
     def __init__(self, server):
         
-        ''' window for addign a client '''
+        ''' window for adding a client '''
 
         bSize = [1, 10]
         tSize = [8, 15]
-        tk.Toplevel.__init__(self)
+        super().__init__()
         self.title("Happy home - User Edit")
         self.geometry(editClient)
         self.resizable(False,False)

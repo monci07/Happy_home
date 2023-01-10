@@ -1,6 +1,8 @@
 import tkinter as tk
 from tkinter import ttk
 from interface import *
+from Screens.windows import offer
+from Screens.windows import offerInfo
 
 Self = 0
 
@@ -123,42 +125,40 @@ def offerShowMenu(self):
     
     #################################################
 
-    f5 = tk.Frame(self, width = 10)
-    self.offersResult = ttk.Treeview(f5, 
-                                        columns = ("ID", "Propietario", "Direccion", "Tipo", "Estado", "Moneda", "Precio", "S. Terreno(m2)", "S. Constr.(m2)","Amueblado", "Recamaras", "Baños", "Niveles", "Mascotas", "Posesion", "Adjudicada"), 
-                                        show = "headings",
-                                        height = 33,
-                                        selectmode="browse")                            
+    f5 = tk.Frame(self, width = 5)
+    
+    self.offersResult = ttk.Treeview(f5,
+                                     columns=("ID", "Direccion", "Tipo", "Estado", "Moneda", "Precio"),
+                                     show = "headings",
+                                     height = 33,
+                                     selectmode="browse")
     style = ttk.Style()
     style.configure("Treeview", font=self.tSize[0])
     style.configure("Treeview.Heading", font=self.tSize[0])
-    tree_handler(self.offersResult,[50, #"ID"
-                                    220, #"Propietario"
-                                    400, #"Direccion"
-                                    150, #"Tipo"
-                                    100, #"Estado"
-                                    150, #"Moneda"
-                                    150, #"Precio"
-                                    150, #"S. Terreno(m2)"
-                                    150, #"S. Constr.(m2)"
-                                    105, #"Amueblado"
-                                    105, #"Recamaras"
-                                    90, #"Baños"
-                                    90, #"Niveles"
-                                    100, #"Mascotas"
-                                    110, #"Posesion"
-                                    110]) #"Adjudicada"        
     
-    verscrlbar = ttk.Scrollbar(f5, orient ="vertical", command = self.offersResult.yview)
-    horzscrlbar = ttk.Scrollbar(f5, orient ="horizontal", command = self.offersResult.xview)
+    tree_handler(self.offersResult,[50, #"ID"
+                                    375, #"Direccion"
+                                    135, #"Tipo"
+                                    90, #"Estado"
+                                    110, #"Moneda"
+                                    150]) #"Precio"
+
+    self.offersResult.grid(column=0, row=0, columnspan=100)
+
+    verscrlbar = tk.Scrollbar(f5, orient ="vertical")
+    
+    verscrlbar.grid(column=101, row=0, rowspan=100, sticky='nse')
+    self.offersResult.configure(yscrollcommand=verscrlbar.set)
+    verscrlbar.configure(command = self.offersResult.yview)    
+
+
     self.offersResult.bind('<Button-1>', O_event_handler)        
     
 
-    f1 = tk.Frame(self)
-    #self.filroO = tk.Button(f1, text = "Filtrar", font =self.tSize[0], command = lambda: offerSearch(self), width=10)
-    self.filroO = tk.Button(f1, text = "Filtrar", font =self.tSize[0], command = lambda: test(self), width=10)
-    self.cerrarTrato = tk.Button(f1, text = "Cerrar Trato", font =self.tSize[0], command = lambda: cerrarTrato_handler(self), width=10)
-    self.volver = tk.Button(f1, text = "Volver", font =self.tSize[0], command = lambda:buscarOMenuInvisible(self), width=10)
+    frameButtonsOS = tk.Frame(self)
+    self.filroO = tk.Button(frameButtonsOS, text = "Filtrar", font =self.tSize[0], command = lambda: offerSearch(self), width=10)
+    self.cerrarTrato = tk.Button(frameButtonsOS, text = "Cerrar Trato", font =self.tSize[0], command = lambda: cerrarTrato_handler(self), width=10)
+    self.volver = tk.Button(frameButtonsOS, text = "Volver", font =self.tSize[0], command = lambda:buscarOMenuInvisible(self), width=10)
     
     self.buscarOMenu = [self.interesado,
                         self.cIdL, self.cIdE,
@@ -178,8 +178,8 @@ def offerShowMenu(self):
                         self.mascotasL, f2,
                         self.posesionL, self.posesionT,
                         self.adjL, f3,
-                        self.offersResult, verscrlbar, horzscrlbar,
-                        f1]        
+                        f5,
+                        frameButtonsOS]        
     
     self.interesado.grid(column=0, row=0, sticky=tk.W)
     
@@ -209,19 +209,15 @@ def offerShowMenu(self):
                         [self.adjL, f3]])    
     
     f5.grid(column=3, row=0, rowspan=20)        
-    self.offersResult.grid(column=0, row=0, columnspan=2)        
-    verscrlbar.grid(column=0, row=0, rowspan=100, sticky='nsw')
-    self.offersResult.configure(yscrollcommand = verscrlbar.set)
-    horzscrlbar.grid(column=0, row=0, sticky='ews', columnspan=0)
-    self.offersResult.configure(xscrollcommand = horzscrlbar.set)
-    #f5.configure(xscrollcommand = horzscrlbar.set)
 
+    self.data = {}
+    self.index = [0, 2, 3, 4, 5, 6]
     for offer in self.manejador.get_ofertas():
         if offer[0] != 0:
             data = fix_data(offer)
-            self.offersResult.insert("", tk.END, iid=data[0], values = data)            
-    
-    f1.grid(column=0, row=19, columnspan=3)
+            self.data[data[0]] = data
+            self.offersResult.insert("", tk.END, iid=data[0], values = tuple([data[i] for i in self.index]))
+    frameButtonsOS.grid(column=0, row=19, columnspan=3)
     self.volver.grid(row=0,column=0) 
     self.cerrarTrato.grid(row=0,column=1, padx=10)
     self.filroO.grid(row=0,column=2)
@@ -264,63 +260,22 @@ def cerrarTrato_handler(self):
       
 def offerSearch(self):
     try:
-        offers= filterOffers()
+        offers= filterOffers(self)
         for i in self.offersResult.get_children():
             self.offersResult.delete(i)
         for offer in offers:
             offer = fix_data(offer)
-            self.offersResult.insert('', 'end', iid=offer[0], values = offer)
+            self.data[offer[0]] = offer
+            self.offersResult.insert("", tk.END, iid=offer[0], values = tuple([offer[i] for i in self.index]))
     except Exception as e:
         print(e)
 
-def filterOffers():
-    offer=[]
-    offer.append('SELECT o.disponibilidad, o.idOferta, CONCAT(c.nombre, \" \", c.apellidoP, \" \", c.apellidoM), p.direccion, t.tipo, o.estado, o.moneda, o.precio, p.superficieT, p.superficieC, p.amueblada, p.numRecamaras, p.numBaños, p.numNiveles, p.mascotas, p.posesion, p.adjudicion FROM cliente as c INNER JOIN propiedad as p ON c.idCliente = p.propietario INNER JOIN tipospropiedad as t ON p.idTipo = t.idTipo INNER JOIN oferta as o ON o.idOferta = p.idPropiedad')
-    if Self.monedaE.get() != '':
-        offer.append(' o.moneda = \"'+Self.monedaE.get()+'\"')
-    if Self.rangeE1.get() != '':
-        offer.append(' o.precio >= ' + str(Self.rangeE1.get()))
-    if Self.rangeE2.get() != '':
-        offer.append(' o.precio <= ' + str(Self.rangeE2.get()))
-    if Self.tipoE.get() != '':
-        offer.append(' t.tipo = \"'+Self.tipoE.get()+'\"')
-    if Self.estadoE.get() != '':
-        offer.append(' o.estado = \"'+Self.estadoE.get()+'\"')
-    if Self.amuebladaE.get() != '':
-        offer.append(' p.amueblada = \"'+Self.amuebladaE.get()+'\"')
-    if Self.numRecamarasE.get() != '':
-        offer.append(' p.numRecamaras = '+(Self.numRecamarasE.get()))
-    if Self.numBañosE.get() != '':
-        offer.append(' p.numBaños = '+(Self.numBañosE.get()))
-    if Self.numNivelesE.get() != '':
-        offer.append(' p.numNiveles = '+(Self.numNivelesE.get()))
-    if Self.mascotasE.get() != 2:
-        offer.append(' p.mascotas = '+str(Self.mascotasE.get()))
-    if Self.posesionE.get() != '':
-        offer.append(' p.posesion = \"'+Self.posesionE.get()+'\"')
-    if Self.adjE.get() != 2:
-        offer.append(' p.adjudicion = '+str(Self.adjE.get()))
-    query = offer[0]
-    if len(offer) < 2:
-        query += ';'
-        return Self.manejador.consultar(query)
-    else:
-        query += ' WHERE'
-        for f in range(1,len(offer)):
-            query += offer[f]
-            if f < len(offer)-1: query += ' AND'
-        query += ';'
-        return Self.manejador.consultar(query)
-
-def test(self):
-    prop = {"p.amueblada":self.amuebladaE.get(), "p.numRecamaras":str(self.numRecamarasE.get()), "p.numNiveles":str(self.numNivelesE.get()), 
+def filterOffers(self):
+    prop = {"t.tipo": self.tipoE.get(),"p.amueblada":self.amuebladaE.get(), "p.numRecamaras":str(self.numRecamarasE.get()), "p.numNiveles":str(self.numNivelesE.get()), 
             "p.numBaños":str(self.numBañosE.get()), "p.mascotas":str(self.mascotasE.get()), "p.posesion":self.posesionE.get(), "p.adjudicion":str(self.adjE.get())}
-    oferta = {"o.estado":self.estadoE.get(), 
-              "o.moneda":self.monedaE.get(), 
-              "precioL":self.rangeE1.get(),
-              "precioH":self.rangeE2.get()}
+    oferta = {"o.estado":self.estadoE.get(),  "o.moneda":self.monedaE.get(),  "precioL":self.rangeE1.get(), "precioH":self.rangeE2.get()}
     tables = (['oferta', oferta], ['propiedad', prop])
-    strings = ["p.amueblada", "p.posesion", "o.estado", "o.moneda"]
+    strings = ["t.tipo", "p.amueblada", "p.posesion", "o.estado", "o.moneda"]
     query = 'SELECT o.disponibilidad, o.idOferta, CONCAT(c.nombre, \" \", c.apellidoP, \" \", c.apellidoM), p.direccion, t.tipo, o.estado, o.moneda, o.precio, p.superficieT, p.superficieC, p.amueblada, p.numRecamaras, p.numBaños, p.numNiveles, p.mascotas, p.posesion, p.adjudicion FROM cliente as c INNER JOIN propiedad as p ON c.idCliente = p.propietario INNER JOIN tipospropiedad as t ON p.idTipo = t.idTipo INNER JOIN oferta as o ON o.idOferta = p.idPropiedad WHERE '
     for table in tables:
         for key in table[1].keys():
@@ -331,7 +286,7 @@ def test(self):
                 else: query += key+' = "'+table[1][key]+'"'
                 query += ' AND '
     query = query[:-5]+';'
-    print(self.manejador.consultar(query))
+    return self.manejador.consultar(query)
 
 def lookup(filters, name, entrie):
     try:
@@ -343,6 +298,10 @@ def lookup(filters, name, entrie):
 def O_event_handler(event):
     if Self.offersResult.identify_region(event.x, event.y) == "separator":
         return "break"
-    elif Self.offersResult.identify_region(event.x, event.y) == "cell":
+    if Self.offersResult.identify_region(event.x, event.y) == "cell":
         Self.oIdE.delete(0,tk.END)
         Self.oIdE.insert(0,Self.offersResult.focus())
+        try:
+            offerInfo.info(data = Self.data[int(Self.offersResult.focus())])
+        except:
+            pass
