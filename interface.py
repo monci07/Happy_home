@@ -58,8 +58,7 @@ def buscarOMenuInvisible(self):
         Parameters:
             self (tk.Tk): Main window
     '''
-    for item in self.buscarOMenu:
-        item.grid_forget()
+    self.frameOfferSearch.grid_forget()
     mainMenuVisible(self)
     
 def buscarCMenuInvisible(self):
@@ -68,8 +67,7 @@ def buscarCMenuInvisible(self):
         Parameters:
             self (tk.Tk): Main window
     '''
-    for item in self.buscarCMenu:
-        item.grid_forget()
+    self.frameClientSearch.grid_forget()
     mainMenuVisible(self)
 
 def buscarRMenuInvisible(self):
@@ -78,8 +76,7 @@ def buscarRMenuInvisible(self):
         Parameters:
             self (tk.Tk): Main window
     '''
-    for item in self.buscarRMenu:
-        item.grid_forget()
+    self.frameRentSearch.grid_forget()
     mainMenuVisible(self)
 
 def tree_handler(tree:ttk.Treeview, lWith: list):

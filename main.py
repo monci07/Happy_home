@@ -26,75 +26,79 @@ class App(tk.Tk):
         self.tSize = [10, 10]
         self.gSize = [0,1]
 
-        self.title("Happy home - Main Menu")
-        self.geometry(mainSize)
-        self.resizable(False,False)
-
         self.vcmdInt = (self.register(self.validateNumber),
                 '%d', '%i', '%P', '%s', '%S', '%v', '%V', '%W')
 
         self.vcmdAlpha = (self.register(self.validateAlpha),
                 '%d', '%i', '%P', '%s', '%S', '%v', '%V', '%W')
+        try:
+            
+            self.title("Happy home - Main Menu")
+            self.geometry(mainSize)
+            self.manejador = server.serverCom()
 
-        self.manejador = server.serverCom()
+            self.frameMainMenu = tk.Frame(self)
 
-        self.frameMainMenu = tk.Frame(self)
-
-        frameM1 = tk.Frame(self.frameMainMenu)
-        self.offersAdd= tk.Button(frameM1, text = "Agregar ofertas", 
-                                  font =self.tSize[0], command = self.addOffer, 
-                                  height=bHeight, width=15)
-        self.clientsAdd= tk.Button(frameM1, text = "Agregar clientes", 
-                                   font =self.tSize[0], command = self.addClient, 
-                                   height=bHeight, width=15)
-        
-        ########################################
-        
-        f2 = tk.Frame(self.frameMainMenu)
-        self.offersSearch= tk.Button(f2, text = "Buscar ofertas", 
-                                     font =self.tSize[0], command = lambda: offerSearch.offerShowMenu(self), 
-                                     height=bHeight, width=15)
-
-        self.clientsSearch= tk.Button(f2, text = "Buscar clientes", 
-                                      font =self.tSize[0], command = lambda: clientSearch.clientShowMenu(self), 
-                                      height=bHeight, width=15)
-
-        self.rentsSearch= tk.Button(f2, text = "Buscar rentas", 
-                                    font =self.tSize[0], command = lambda: rentSearch.rentShowMenu(self), 
+            f1 = tk.Frame(self.frameMainMenu)
+            self.offersAdd= tk.Button(f1, text = "Agregar ofertas", 
+                                    font =self.tSize[0], command = self.addOffer, 
+                                    height=bHeight, width=15)
+            self.clientsAdd= tk.Button(f1, text = "Agregar clientes", 
+                                    font =self.tSize[0], command = self.addClient, 
                                     height=bHeight, width=15)
         
-        ########################################
+            ########################################
         
-        f3 = tk.Frame(self.frameMainMenu)
-        self.editOffer= tk.Button(f3, text = "Editar oferta", 
-                                  font =self.tSize[0], command = self.editOffer, 
-                                  height=bHeight, width=15)
-        self.editClient= tk.Button(f3, text = "Editar cliente",
-                                   font =self.tSize[0], command = self.editClient,
-                                   height=bHeight, width=15)
-        
-        self.mainMenu = [frameM1, f2, f3]
+            f2 = tk.Frame(self.frameMainMenu)
+            self.offersSearch= tk.Button(f2, text = "Buscar ofertas", 
+                                        font =self.tSize[0], command = lambda: offerSearch.offerShowMenu(self), 
+                                        height=bHeight, width=15)
 
-        config_grid(self.frameMainMenu,[[i, 1] for i in range(0,3)], [[i, 1] for i in range(0, 1)])
+            self.clientsSearch= tk.Button(f2, text = "Buscar clientes", 
+                                        font =self.tSize[0], command = lambda: clientSearch.clientShowMenu(self), 
+                                        height=bHeight, width=15)
 
-        pad = 10
-        self.frameMainMenu.grid(column=0, row=0)
-        frameM1.grid(column=0, row=0)
-        self.offersAdd.grid(column=0, row = 0, padx = pad)
-        self.clientsAdd.grid(column=1, row = 0, padx = pad)
+            self.rentsSearch= tk.Button(f2, text = "Buscar rentas", 
+                                        font =self.tSize[0], command = lambda: rentSearch.rentShowMenu(self), 
+                                        height=bHeight, width=15)
+        
+            ########################################
+        
+            f3 = tk.Frame(self.frameMainMenu)
+            self.editOffer= tk.Button(f3, text = "Editar oferta", 
+                                    font =self.tSize[0], command = self.editOffer, 
+                                    height=bHeight, width=15)
+            self.editClient= tk.Button(f3, text = "Editar cliente",
+                                    font =self.tSize[0], command = self.editClient,
+                                    height=bHeight, width=15)
+        
+            self.mainMenu = [self.frameMainMenu, f2, f3]
 
-        f2.grid(column=0, row=1)
-        self.clientsSearch.grid(column=0, row = 0, padx = pad)
-        self.offersSearch.grid(column=1, row = 0, padx = pad)
-        self.rentsSearch.grid(column=3, row = 0, padx = pad)
-        
-        f3.grid(column=0, row=2)
-        self.editOffer.grid(column=0, row = 0, padx = pad)
-        self.editClient.grid(column=1, row = 0, padx = pad)
+            config_grid(self.frameMainMenu,[[i, 1] for i in range(0,3)], [[i, 1] for i in range(0, 1)])
 
+            padx = 10
+            pady = 5
+            self.frameMainMenu.grid(column=0, row=0)
+            f1.grid(column=0, row=0)
+            self.offersAdd.grid(column=0, row = 0, padx = padx, pady = pady)
+            self.clientsAdd.grid(column=1, row = 0, padx = padx, pady = pady)
+
+            f2.grid(column=0, row=1)
+            self.clientsSearch.grid(column=0, row = 0, padx = padx, pady = pady)
+            self.offersSearch.grid(column=1, row = 0, padx = padx, pady = pady)
+            self.rentsSearch.grid(column=3, row = 0, padx = padx, pady = pady)
         
+            f3.grid(column=0, row=2)
+            self.editOffer.grid(column=0, row = 0, padx = padx, pady = pady)
+            self.editClient.grid(column=1, row = 0, padx = padx, pady = pady)
+
+            self.protocol("WM_DELETE_WINDOW", self.on_closing)
+
+        except:
+            
+            self.title("Happy home - Conection error")
+            tk.Label(self, text = "No se pudo conectar con el servidor,\n favor de cerrar el programa y prender XAMPP.", font = self.tSize[0]).pack(expand=True, fill='both')
         
-        self.protocol("WM_DELETE_WINDOW", self.on_closing)
 
     def validateNumber(self, action, index, value_if_allowed,
                        prior_value, text, validation_type, trigger_type, widget_name):
